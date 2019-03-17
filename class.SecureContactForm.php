@@ -32,15 +32,15 @@ class SecureContactForm
 	const DEFAULTTO			= 'postmaster@localhost'; // default "to" e-mail address when address has not been provided.
 	const XMAILER			= 'Secure Mail';
 	const MIMEVERSION		= '1.0';
-	const TRANSFERENCODING 	= '8Bit';
+	const TRANSFERENCODING 		= '8Bit';
 	const CHARSET 			= 'UTF-8';
 	const MAILFORMAT		= 'Flowed';  // Fixed, Flowed. (rfc3676)
-	const DELSP				= 'Yes'; // Yes, No. (rfc3676)
+	const DELSP			= 'Yes'; // Yes, No. (rfc3676)
 	const OPTPARAM			= '-f'; // optional 5th parameter.
-	const SUPRESSMAILERROR  = true; // prevents PHP mail errors. (recommended)
+	const SUPRESSMAILERROR  	= true; // prevents PHP mail errors. (recommended)
 	
-	private $sieve 		= 0;    // Empty sieve 
-	private $slots 		= 200;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
+	private $sieve 			= 0;    // Empty sieve 
+	private $slots 			= 200;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
 	### END OF CONFIGURATION 
 	
 	public function __construct($params = array()) 
@@ -86,7 +86,7 @@ class SecureContactForm
 			isset($params['url'])        ? $this->fields['url']    = $params['url']  : ''; 
 			isset($params['phone'])      ? $this->fields['phone']    = $params['phone']  : '';
 			isset($params['address'])    ? $this->fields['address']    = $params['address']  : '';	
-			isset($params['city'])    	 ? $this->fields['city']    = $params['city']  : '';
+			isset($params['city'])       ? $this->fields['city']    = $params['city']  : '';
 			isset($params['country'])    ? $this->fields['country']    = $params['country']  : '';				
 			isset($params['subject'])    ? $this->fields['subject']   = $params['subject'] : '';
 			isset($params['terms'])      ? $this->fields['terms']   = $params['terms'] : '';
@@ -127,7 +127,6 @@ class SecureContactForm
 	*/	
 	public function fieldScan() 
 	{	
-	
 		foreach($this->fields as $key => $value)  {
 		
 				// check fieldsize.
@@ -265,7 +264,7 @@ class SecureContactForm
 	
 	/**
 	* Store session messages
-    * @param string $value
+        * @param string $value
 	* @return void
 	*/ 
 	public function sessionmessage($value) 
