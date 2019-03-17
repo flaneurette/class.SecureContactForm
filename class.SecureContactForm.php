@@ -40,7 +40,7 @@ class SecureContactForm
 	const SUPRESSMAILERROR  	= true; // prevents PHP mail errors. (recommended)
 	
 	private $sieve 			= 0;    // Empty sieve 
-	private $slots 			= 200;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
+	private $slots 			= 2;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
 	### END OF CONFIGURATION 
 	
 	public function __construct($params = array()) 
