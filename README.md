@@ -1,9 +1,7 @@
 # class.SecureContactForm
 A secure class and contact form
 
-A Secure Contact form for PHP.
-
-See the mailform.php for a complete example.
+A Secure mail class and contact form for PHP. See the mailform.php for a complete example.
 
 # Simple implementation:
 
