@@ -82,7 +82,7 @@ class SecureMail
 		try {
 			isset($params['to'])         ? $this->fields['to']  = $params['to'] : self::DEFAULTTO; 
 			isset($params['name'])       ? $this->fields['name']   = $params['name'] : ''; 
-			isset($params['e-mail'])     ? $this->fields['email']    = $params['email']  : '';
+			isset($params['email'])      ? $this->fields['email']    = $params['email']  : '';
 			isset($params['url'])        ? $this->fields['url']    = $params['url']  : ''; 
 			isset($params['phone'])      ? $this->fields['phone']    = $params['phone']  : '';
 			isset($params['address'])    ? $this->fields['address']    = $params['address']  : '';	
@@ -176,6 +176,11 @@ class SecureMail
 		} else {
 			$this->sessionmessage('Issue: body cannot be empty. Mail has not been sent!'); 
 			$this->sieve++; 
+		}
+		
+		if(strlen($this->fields['body']) > self::MAXBODYSIZE) {
+			$this->sessionmessage('Issue: Maximum body text exceeded:' . self::MAXBODYSIZE); 
+			$this->sieve++; 		
 		}
 		
 		if($this->sieve >= 1) { 
