@@ -68,7 +68,7 @@ class SecureContactForm
 	}
 	
 	/**
-	* @var array
+	* @var array form parameters.
 	*/	
 	public $fields = array();
 	
@@ -77,8 +77,8 @@ class SecureContactForm
 	* @param array $params
 	* @throws Exception
 	*/	
-    public function init($params=[])
-    {
+        public function init($params=[])
+        {
 		try {
 			isset($params['to'])         ? $this->fields['to']  = $params['to'] : self::DEFAULTTO; 
 			isset($params['name'])       ? $this->fields['name']   = $params['name'] : ''; 
@@ -96,7 +96,7 @@ class SecureContactForm
 		} catch(Exception $e) {
 			$this->sessionmessage('Problem initializing:'.$e->getMessage());
 		}
-    }
+         }
 
 	/**
 	* Occurence of these field vectors is allowed only once.
@@ -153,7 +153,7 @@ class SecureContactForm
 		}
 		
 		if($this->sieve >= 1) { 
-			$this->sessionmessage('Upload sieve found issues within the form fields. Mail has not been sent!'); 
+			$this->sessionmessage('Mail sieve found issues within the form fields. Mail has not been sent!'); 
 			return FALSE; // e-mail cannot be send.
 			} else {
 			return TRUE;
@@ -179,7 +179,7 @@ class SecureContactForm
 		}
 		
 		if($this->sieve >= 1) { 
-			$this->sessionmessage('Upload sieve found issues within the form fields. Mail has not been sent!'); 
+			$this->sessionmessage('Mail sieve found issues within the form fields. Mail has not been sent!'); 
 			return FALSE; // e-mail cannot be send.
 			} else {
 			return TRUE;
@@ -198,7 +198,7 @@ class SecureContactForm
 		$name    = $this->clean($this->fields['name'],'field');
 		$subject = $this->clean($this->fields['subject'],'field');
 		$message = $this->clean($this->fields['body'],'body');
-		$ip		 = $this->clean($_SERVER['REMOTE_ADDR'],'field');
+		$ip      = $this->clean($_SERVER['REMOTE_ADDR'],'field');
 	
 		$headers = [
 			'From'                      => self::SERVERADDR,
