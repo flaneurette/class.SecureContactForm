@@ -1,7 +1,5 @@
 <?php
-
 namespace security\forms;
-
 ###########################################################################
 ##                                                                       ##
 ##  Copyright 2008-2019 Alexandra van den Heetkamp.                      ##
@@ -21,7 +19,6 @@ namespace security\forms;
 ##  <http://www.gnu.org/licenses/>.                                      ##
 ##                                                                       ##
 ###########################################################################
-
 class SecureMail
 {
 	### CONFIGURATION 
@@ -40,7 +37,7 @@ class SecureMail
 	const SUPRESSMAILERROR  	= true; // prevents PHP mail errors. (recommended)
 	
 	private $sieve 			= 0;    // Empty sieve 
-	private $slots 			= 2;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
+	private $slots 			= 770;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
 	### END OF CONFIGURATION 
 	
 	public function __construct($params = array()) 
@@ -53,17 +50,17 @@ class SecureMail
 		$this->bodyvectors = array();
 		$this->fieldvectors = array();
 	}
-
 	public function fullScan() 
 	{
-		if($this->fieldScan() == TRUE) {
-			if($this->bodyScan() == TRUE) {
-				return TRUE;
-				} else {
-			return FALSE;
-			}
-		} else {
-		return FALSE;
+		$this->allocateMailSlots();
+		$this->fieldScan();
+		$this->bodyScan();
+
+		if($this->sieve >= 1) { 
+			$this->sessionmessage('Mail sieve found issues within the form fields. Mail has not been sent!'); 
+			return FALSE; // e-mail cannot be send.
+			} else {
+			return TRUE;
 		}
 	}
 	
@@ -97,7 +94,6 @@ class SecureMail
 			$this->sessionmessage('Problem initializing:'.$e->getMessage());
 		}
          }
-
 	/**
 	* Occurence of these field vectors is allowed only once.
 	* @var array
@@ -142,7 +138,6 @@ class SecureMail
 					$this->sieve++;  
 					}	
 				}
-
 				// scan for duplicate characters.
 				for($k=0; $k<count($this->fieldvectors); $k++) {
 					if(substr_count($value, $this->fieldvectors[$k]) >1) { 
@@ -218,7 +213,6 @@ class SecureMail
 		foreach ($headers as $key => $value) {
 			$mime_headers[] = "$key: $value";
 		}
-
 		$mail_headers = join("\n", $mime_headers);
 		
 		if(self::SUPRESSMAILERROR == true) {
@@ -326,7 +320,6 @@ class SecureMail
 		$buffer=self::MAXFIELDSIZE;
 		
 		$data = '';
-
 		switch($method) {
 			case 'alpha':
 				$this->data =  preg_replace('/[^a-zA-Z]/','', $string);
@@ -352,5 +345,6 @@ class SecureMail
 			}
 		return $this->data;
 	}
-
 }
+
+?>
