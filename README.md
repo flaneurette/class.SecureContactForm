@@ -4,7 +4,7 @@ A Secure mail class and contact form for PHP. See the mailform.php for a complet
 
 # Simple implementation:
 
-    include("class.SecureContactForm.php");
+    include("class.SecureMail.php");
 
 		$parameters = array( 
 			'to' => 'info@yourwebsite.com',
@@ -14,7 +14,7 @@ A Secure mail class and contact form for PHP. See the mailform.php for a complet
 			'body' => $_POST['body']
 		);
 			
-		$checkForm = new \security\forms\SecureContactForm($parameters);
+		$checkForm = new \security\forms\SecureMail($parameters);
 		$scan = $checkForm->fullScan(); 
 			
 		if($scan != FALSE) {
