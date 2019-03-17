@@ -3,9 +3,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
 session_start(); 
-include("class.SecureContactForm.php");
+include("class.SecureMail.php");
 
-$setup = new \security\forms\SecureContactForm();
+$setup = new \security\forms\SecureMail();
 $token = $setup->getToken();
 $_SESSION['token'] = $token;
 	
@@ -27,7 +27,7 @@ $_SESSION['token'] = $token;
 				'body' => $_POST['body']
 			);
 			
-			$checkForm = new \security\forms\SecureContactForm($parameters);
+			$checkForm = new \security\forms\SecureMail($parameters);
 			$scan = $checkForm->fullScan(); 
 			
 			if($scan != FALSE) {
