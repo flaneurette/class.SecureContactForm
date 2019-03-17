@@ -22,7 +22,7 @@ namespace security\forms;
 ##                                                                       ##
 ###########################################################################
 
-class SecureContactForm
+class SecureMail
 {
 	### CONFIGURATION 
 	const MAXBODYSIZE 		= 5000; // number of chars of body text.
