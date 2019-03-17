@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL); 
-ini_set('display_errors', 'on');
 
 session_start(); 
 include("class.SecureMail.php");
@@ -14,16 +12,8 @@ $_SESSION['token'] = $token;
 			$parameters = array( 
 				'to' => 'info@yourwebsite.com',
 				'name' => $_POST['name'],
-				'email' => $_POST['email'],
-				# 'url' => $_POST['url'],
-				# 'phone' => $_POST['phone'],
-				# 'address' => $_POST['address'],
-				# 'city' => $_POST['city'],
-				# 'country' => $_POST['country'],				
+				'email' => $_POST['email'],				
 				'subject' => $_POST['subject'],
-				# 'terms' => $_POST['terms'],
-				# 'captcha' => $_POST['captcha'],
-				# 'extrafield' => $_POST['extrafield'],
 				'body' => $_POST['body']
 			);
 			
