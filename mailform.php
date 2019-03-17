@@ -12,7 +12,7 @@ $_SESSION['token'] = $token;
 	if(isset($_POST['token']))  {
 		if($_POST['token'] == $_SESSION['token']) {
 			$parameters = array( 
-				'to' => 'info@flaneurette.nl',
+				'to' => 'info@yourwebsite.com',
 				'name' => $_POST['name'],
 				'email' => $_POST['email'],
 				# 'url' => $_POST['url'],
