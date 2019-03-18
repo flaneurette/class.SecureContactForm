@@ -26,24 +26,23 @@ class SecureMail
 {
 	### CONFIGURATION 
 	
-	const MAXBODYSIZE 		= 5000; // number of chars of body text.
-	const MAXFIELDSIZE 		= 50;   // number of allowed chars for single fields.
-	const FORMTIME			= 10;  // Minimum time in seconds for a user to fill out a form, detects bots.
-	
-	const SERVERADDR		= 'server <server@localhost>'; 
+	const SERVERADDR		= 'server <server@localhost>'; // Server e-mail address.
 	const DEFAULTTO			= 'postmaster@localhost'; // default "to" e-mail address when address has not been provided.
-	const XMAILER			= 'Secure Mail';
-	const MIMEVERSION		= '1.0';
-	const TRANSFERENCODING 		= '8Bit';
-	const CHARSET 			= 'UTF-8';
+	const XMAILER			= 'Secure Mail'; // Name class mailer.
+	const MIMEVERSION		= '1.0';	// Mime-type version
+	const TRANSFERENCODING 		= '8Bit';	// Transfer encoding, recommended: 8bits.
+	const CHARSET 			= 'UTF-8';	// Character set of expected e-mail, recommended: utf8.
 	const MAILFORMAT		= 'Flowed';  	// Fixed, Flowed. (rfc3676)
 	const DELSP			= 'Yes'; 	// Yes, No. (rfc3676)
-	const OPTPARAM			= '-f'; 	// optional 5th parameter.
-	const SUPRESSMAILERROR  	= true; 	// prevents PHP mail errors. (recommended)
-	const MINHASHBYTES		= 32; 		// Minimum of bytes for secure hash.
-	const MAXHASHBYTES		= 64; 		// Minimum of bytes for secure hash, more increases cost. Max. recommended: 256 bytes.
+	const OPTPARAM			= '-f'; 	// Optional 5th parameter.
+	const MAXBODYSIZE 		= 5000; 	// Number of chars of body text.
+	const MAXFIELDSIZE 		= 50;   	// Number of allowed chars for single fields.
+	const FORMTIME			= 10;  		// Minimum time in seconds for a user to fill out a form, detects bots.
+	const MINHASHBYTES		= 32; 		// Min. of bytes for secure hash.
+	const MAXHASHBYTES		= 64; 		// Max. of bytes for secure hash, more increases cost. Max. recommended: 256 bytes.
 	const MINMERSENNE		= 0xff; 	// Min. value of the Mersenne twister.
 	const MAXMERSENNE		= 0xffffffff; 	// Max. value of the Mersenne twister.
+	const SUPRESSMAILERROR  	= true; 	// Prevents PHP mail errors. (recommended)
 	
 	private $sieve 			= 0;    // Empty sieve 
 	private $slots 			= 10;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
