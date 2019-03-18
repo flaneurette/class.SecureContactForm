@@ -231,9 +231,25 @@ class SecureMail
 	*/
 	public function getToken()
 	{
-		$bytes  = mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff);
-		$bytes .= mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff);
-		$bytes .= mt_rand(0,0xfffffff) . bin2hex(random_bytes(256));
+		
+		$bytes = 0;
+		
+		if (function_exists('random_bytes')) {
+			$len   = mt_rand(128,256);
+        		$bytes .= bin2hex(random_bytes($len));
+    		}
+		if (function_exists('openssl_random_pseudo_bytes')) {
+			$len   = mt_rand(128,256);
+        		$bytes .= bin2hex(openssl_random_pseudo_bytes($len));
+    		}
+		
+		if(strlen($bytes) < 128) {
+			$bytes .= mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff)
+				. mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) 
+				. mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) 
+				. mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff); 
+		}
+		
 		$token = hash('sha512',$bytes);
 		
 		if(isset($_SESSION['token'])) 
