@@ -1,34 +1,43 @@
 <?php
 
 session_start(); 
+
 include("class.SecureMail.php");
 
 $setup = new \security\forms\SecureMail();
+
 $token = $setup->getToken();
+$time  = $setup->setTime();
+
 $_SESSION['token'] = $token;
 	
 	if(isset($_POST['token']))  {
-		if($_POST['token'] == $_SESSION['token']) {
-			$parameters = array( 
-				'to' => 'info@yourwebsite.com',
-				'name' => $_POST['name'],
-				'email' => $_POST['email'],				
-				'subject' => $_POST['subject'],
-				'body' => $_POST['body']
-			);
+		
+		$finished_in_time = $setup->getTime();
+		if($finished_in_time == TRUE) {
 			
-			$checkForm = new \security\forms\SecureMail($parameters);
-			$scan = $checkForm->fullScan(); 
-			
-			if($scan != FALSE) {
-				$checkForm->sendmail();
-				$checkForm->sessionmessage('Mail sent!'); 
-				$token = $checkForm->getToken();
-				} else {
-				$checkForm->sessionmessage('Mail not sent.');
+			if($_POST['token'] == $_SESSION['token']) {
+				$parameters = array( 
+					'to' => 'info@yourwebsite.com',
+					'name' => $_POST['name'],
+					'email' => $_POST['email'],				
+					'subject' => $_POST['subject'],
+					'body' => $_POST['body']
+				);
+
+				$checkForm = new \security\forms\SecureMail($parameters);
+				$scan = $checkForm->fullScan(); 
+
+				if($scan != FALSE) {
+					$checkForm->sendmail();
+					$checkForm->sessionmessage('Mail sent!'); 
+					$token = $checkForm->getToken();
+					} else {
+					$checkForm->sessionmessage('Mail not sent.');
+				}
+			} else {
+				$checkForm->sessionmessage('Invalid token.'); 
 			}
-		} else {
-			$checkForm->sessionmessage('Invalid token.'); 
 		}
 	// Show all session messages.
 	$checkForm->showmessage();
