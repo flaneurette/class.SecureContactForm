@@ -35,6 +35,7 @@ class SecureMail
 	const MAILFORMAT		= 'Flowed';  	// Fixed, Flowed. (rfc3676)
 	const DELSP			= 'Yes'; 	// Yes, No. (rfc3676)
 	const OPTPARAM			= '-f'; 	// Optional 5th parameter.
+	### ADVANCED
 	const MAXBODYSIZE 		= 5000; 	// Number of chars of body text.
 	const MAXFIELDSIZE 		= 50;   	// Number of allowed chars for single fields.
 	const FORMTIME			= 10;  		// Minimum time in seconds for a user to fill out a form, detects bots.
