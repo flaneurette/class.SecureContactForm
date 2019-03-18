@@ -24,6 +24,7 @@ class SecureMail
 	### CONFIGURATION 
 	const MAXBODYSIZE 		= 5000; // number of chars of body text.
 	const MAXFIELDSIZE 		= 50;   // number of allowed chars for single fields.
+	const FORMTIME			= 10;  // Minimum time in seconds for a user to fill out a form, flagged if lower.
 	
 	const SERVERADDR		= 'server <server@localhost>'; 
 	const DEFAULTTO			= 'postmaster@localhost'; // default "to" e-mail address when address has not been provided.
@@ -224,7 +225,43 @@ class SecureMail
 		}
 		return TRUE;
 	}
- 
+	
+  	/**
+	* Allocates a timeslot. If the form is submited under 10 seconds, we can assume it's a bot.
+	* @return mixed boolean, void.
+	*/	
+	public function setTime()
+	{
+		if(isset($_SESSION['form_time'])) {
+			return TRUE;
+			} else {
+			$_SESSION['form_time'] = microtime(true);	
+		}
+		return;
+	}
+	
+  	/**
+	* Check timeslot. If the form is submited under 10 seconds, we can assume it's a bot.
+	* @return mixed boolean, void.
+	*/
+	public function getTime()
+	{
+		if($_SESSION['form_time']) {
+			$time_start = $_SESSION['form_time'];
+			$time_end = microtime(true);
+			$duration = (int)($time_end - $time_start);
+			if($duration < self::FORMTIME) {
+				$this->sessionmessage('Issue: form was submitted too quickly, looks like a bot.'); 
+				return FALSE; 
+				} else {
+				return TRUE; 
+			}
+		} else {
+			$this->sessionmessage('Issue: session time not initiated.'); 
+			return FALSE; 			
+		}
+	}
+	
  	/**
 	* Allocates a pseudo random token to prevent CSRF.
 	* @return mixed boolean, void.
