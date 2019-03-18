@@ -1,5 +1,7 @@
 <?php
+
 namespace security\forms;
+
 ###########################################################################
 ##                                                                       ##
 ##  Copyright 2008-2019 Alexandra van den Heetkamp.                      ##
@@ -19,12 +21,13 @@ namespace security\forms;
 ##  <http://www.gnu.org/licenses/>.                                      ##
 ##                                                                       ##
 ###########################################################################
+
 class SecureMail
 {
 	### CONFIGURATION 
 	const MAXBODYSIZE 		= 5000; // number of chars of body text.
 	const MAXFIELDSIZE 		= 50;   // number of allowed chars for single fields.
-	const FORMTIME			= 10;  // Minimum time in seconds for a user to fill out a form, flagged if lower.
+	const FORMTIME			= 10;  // Minimum time in seconds for a user to fill out a form, detects bots.
 	
 	const SERVERADDR		= 'server <server@localhost>'; 
 	const DEFAULTTO			= 'postmaster@localhost'; // default "to" e-mail address when address has not been provided.
@@ -232,12 +235,9 @@ class SecureMail
 	*/	
 	public function setTime()
 	{
-		if(isset($_SESSION['form_time'])) {
-			return TRUE;
-			} else {
-			$_SESSION['form_time'] = microtime(true);	
-		}
-		return;
+
+		$_SESSION['form_time'] = microtime(true);	
+		return TRUE;
 	}
 	
   	/**
@@ -246,10 +246,12 @@ class SecureMail
 	*/
 	public function getTime()
 	{
-		if($_SESSION['form_time']) {
+		if(isset($_SESSION['form_time'])) {
+			
 			$time_start = $_SESSION['form_time'];
 			$time_end = microtime(true);
-			$duration = (int)($time_end - $time_start);
+			$duration = round($time_end - $time_start);
+			
 			if($duration < self::FORMTIME) {
 				$this->sessionmessage('Issue: form was submitted too quickly, looks like a bot.'); 
 				return FALSE; 
