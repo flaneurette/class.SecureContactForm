@@ -25,6 +25,7 @@ namespace security\forms;
 class SecureMail
 {
 	### CONFIGURATION 
+	
 	const MAXBODYSIZE 		= 5000; // number of chars of body text.
 	const MAXFIELDSIZE 		= 50;   // number of allowed chars for single fields.
 	const FORMTIME			= 10;  // Minimum time in seconds for a user to fill out a form, detects bots.
@@ -35,13 +36,18 @@ class SecureMail
 	const MIMEVERSION		= '1.0';
 	const TRANSFERENCODING 		= '8Bit';
 	const CHARSET 			= 'UTF-8';
-	const MAILFORMAT		= 'Flowed';  // Fixed, Flowed. (rfc3676)
-	const DELSP			= 'Yes'; // Yes, No. (rfc3676)
-	const OPTPARAM			= '-f'; // optional 5th parameter.
-	const SUPRESSMAILERROR  	= true; // prevents PHP mail errors. (recommended)
+	const MAILFORMAT		= 'Flowed';  	// Fixed, Flowed. (rfc3676)
+	const DELSP			= 'Yes'; 	// Yes, No. (rfc3676)
+	const OPTPARAM			= '-f'; 	// optional 5th parameter.
+	const SUPRESSMAILERROR  	= true; 	// prevents PHP mail errors. (recommended)
+	const MINHASHBYTES		= '32'; 	// Minimum of bytes for secure hash.
+	const MAXHASHBYTES		= '64'; 	// Minimum of bytes for secure hash, more increases cost. Max. recommended: 256 bytes.
+	const MINMERSENNE		= 0xfff; 	// Mim. value of the Mersenne twister.
+	const MAXMERSENNE		= 0xffffffff; 	// Max. value of the Mersenne twister.
 	
 	private $sieve 			= 0;    // Empty sieve 
 	private $slots 			= 10;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
+	
 	### END OF CONFIGURATION 
 	
 	public function __construct($params = array()) 
@@ -274,19 +280,19 @@ class SecureMail
 		$bytes = 0;
 		
 		if (function_exists('random_bytes')) {
-			$len   = mt_rand(128,256);
+			$len   = mt_rand(self::MINHASHBYTES,self::MAXHASHBYTES);
         		$bytes .= bin2hex(random_bytes($len));
     		}
 		if (function_exists('openssl_random_pseudo_bytes')) {
-			$len   = mt_rand(128,256);
+			$len   = mt_rand(self::MINHASHBYTES,self::MAXHASHBYTES);
         		$bytes .= bin2hex(openssl_random_pseudo_bytes($len));
     		}
 		
 		if(strlen($bytes) < 128) {
-			$bytes .= mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff)
-				. mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) 
-				. mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) 
-				. mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff) . mt_rand(0xff,0xffffffff); 
+			$bytes .= mt_rand(self::MINMERSENNE,self::MAXMERSENNE) . mt_rand(self::MINMERSENNE,self::MAXMERSENNE) . mt_rand(self::MINMERSENNE,self::MAXMERSENNE)
+				. mt_rand(self::MINMERSENNE,self::MAXMERSENNE) . mt_rand(self::MINMERSENNE,self::MAXMERSENNE) . mt_rand(self::MINMERSENNE,self::MAXMERSENNE) 
+				. mt_rand(self::MINMERSENNE,self::MAXMERSENNE) . mt_rand(self::MINMERSENNE,self::MAXMERSENNE) . mt_rand(self::MINMERSENNE,self::MAXMERSENNE) 
+				. mt_rand(self::MINMERSENNE,self::MAXMERSENNE) . mt_rand(self::MINMERSENNE,self::MAXMERSENNE) . mt_rand(self::MINMERSENNE,self::MAXMERSENNE); 
 		}
 		
 		$token = hash('sha512',$bytes);
