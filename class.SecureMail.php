@@ -2,6 +2,26 @@
 
 namespace security\forms;
 
+###########################################################################
+##                                                                       ##
+##  Copyright 2008-2019 Alexandra van den Heetkamp.                      ##
+##                                                                       ##
+##  Secure Mail Class. This class processes e-mails coming from a        ##
+##  contact form.                                                        ##
+##                                                                       ##
+##  This class is free software: you can redistribute it and/or modify it##
+##  under the terms of the GNU General Public License as published       ##
+##  by the Free Software Foundation, either version 3 of the             ##
+##  License, or any later version.                                       ##
+##                                                                       ##
+##  This class is distributed in the hope that it will be useful, but    ##
+##  WITHOUT ANY WARRANTY; without even the implied warranty of           ##
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        ##
+##  GNU General Public License for more details.                         ##
+##  <http://www.gnu.org/licenses/>.                                      ##
+##                                                                       ##
+###########################################################################
+
 class SecureMail
 {
 	### CONFIGURATION 
