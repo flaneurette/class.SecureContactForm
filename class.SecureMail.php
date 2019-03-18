@@ -234,7 +234,7 @@ class SecureMail
 		$bytes  = mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff);
 		$bytes .= mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff);
 		$bytes .= mt_rand(0,0xfffffff) . bin2hex(random_bytes((256-(64 % 2)) / 2));
-		$token = password_hash($bytes, PASSWORD_DEFAULT);
+		$token = hash('sha512',$bytes);
 		
 		if(isset($_SESSION['token'])) 
 		{ 
