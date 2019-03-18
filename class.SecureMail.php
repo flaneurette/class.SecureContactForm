@@ -40,9 +40,9 @@ class SecureMail
 	const DELSP			= 'Yes'; 	// Yes, No. (rfc3676)
 	const OPTPARAM			= '-f'; 	// optional 5th parameter.
 	const SUPRESSMAILERROR  	= true; 	// prevents PHP mail errors. (recommended)
-	const MINHASHBYTES		= '32'; 	// Minimum of bytes for secure hash.
-	const MAXHASHBYTES		= '64'; 	// Minimum of bytes for secure hash, more increases cost. Max. recommended: 256 bytes.
-	const MINMERSENNE		= 0xfff; 	// Mim. value of the Mersenne twister.
+	const MINHASHBYTES		= 32; 		// Minimum of bytes for secure hash.
+	const MAXHASHBYTES		= 64; 		// Minimum of bytes for secure hash, more increases cost. Max. recommended: 256 bytes.
+	const MINMERSENNE		= 0xff; 	// Min. value of the Mersenne twister.
 	const MAXMERSENNE		= 0xffffffff; 	// Max. value of the Mersenne twister.
 	
 	private $sieve 			= 0;    // Empty sieve 
