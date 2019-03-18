@@ -226,15 +226,15 @@ class SecureMail
 	}
  
  	/**
-	* Allocates a pseudo random token.
+	* Allocates a pseudo random token to prevent CSRF.
 	* @return mixed boolean, void.
 	*/
 	public function getToken()
 	{
-		$a = mt_rand(0,0xfffff)  . mt_rand(0,0xfffff) . mt_rand(0,0xfffff);
-		$a .= mt_rand(0,0xfffff) . mt_rand(0,0xfffff) . mt_rand(0,0xfffff);
-		$a .= mt_rand(0,0xfffff) . bin2hex(random_bytes((64-(64%2))/2));
-		$token = password_hash($a, PASSWORD_DEFAULT);
+		$bytes  = mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff);
+		$bytes .= mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff) . mt_rand(0,0xfffffff);
+		$bytes .= mt_rand(0,0xfffffff) . bin2hex(random_bytes((256-(64 % 2)) / 2));
+		$token = password_hash($bytes, PASSWORD_DEFAULT);
 		
 		if(isset($_SESSION['token'])) 
 		{ 
