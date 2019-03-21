@@ -24,10 +24,12 @@ namespace security\forms;
 
 class SecureMail
 {
-	### CONFIGURATION 
+	### REQUIRED CONFIGURATION
 	const DOMAIN			= 'yourdomain.tld'; // Domain this script is hosted on.
 	const SERVERADDR		= 'server <server@yourdomain.tld>'; // Server e-mail address.
 	const DEFAULTTO			= 'info@yourdomain.tld'; // default "to" e-mail address when address has not been provided.
+	
+	### OPTIONAL CONFIGURATION (DEFAULT)
 	const XMAILER			= 'Secure Mail'; // Name class mailer.
 	const LANGUAGE			= 'en'; 	// en, fr, de, x-klingon. (rfc1766) 
 	const MIMEVERSION		= '1.0';	// Mime-type version
@@ -41,7 +43,7 @@ class SecureMail
 	const SENSITIVITY		= true;		// Enables sensitivity header.
 	const SENSITIVITY_VALUE		= 'Normal'; 	// Normal, Personal, Private and Company-Confidential.
 	
-	### ADVANCED
+	### ADVANCED CONFIGURATION
 	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions: (htmlspecialchars, htmlentities) 
 	const MAXBODYSIZE 		= 5000; 	// Number of chars of body text.
 	const MAXFIELDSIZE 		= 50;   	// Number of allowed chars for single fields.
@@ -52,7 +54,7 @@ class SecureMail
 	const MAXMERSENNE		= 0xffffffff; 	// Max. value of the Mersenne twister.
 	const SUPRESSMAILERROR  	= true; 	// Prevents PHP mail errors. (recommended)
 	
-	### EXPERIMENTAL
+	### EXPERIMENTAL CONFIGURATION
 	const CUSTOMHEADER		= 'X-Klingon-Header-1'; // Optional, your own Header. The 'X-' part is required!
 	const CUSTOMHEADERVALUE		= 'JAJ VIGHAJ'; // Value of the custom Header. Klingon for: "Own the day." 
 	const REMOVEPHPHEADERS  	= false; 	// Experimental. Tries to remove X-PHP headers. To removes all PHP headers for certain, edit your php.ini: 'mail.add_x_header = Off'
