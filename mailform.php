@@ -1,12 +1,15 @@
 <?php
 
-// optional security headers to consider.
+// Error reporting.
+ini_set('display_errors', 1); 
+error_reporting(E_ALL);
+
+// Optional headers to consider.
 header("X-Frame-Options: DENY"); 
 header("X-XSS-Protection: 1; mode=block"); 
 header("Strict-Transport-Security: max-age=30");
 header("Referrer-Policy: same-origin");
 
-// secure cookie.
 session_start([
     'cookie_httponly' => true,
     'cookie_secure' => true
@@ -19,7 +22,7 @@ include("class.SecureMail.php");
 			if($_POST['token'] === $_SESSION['token']) {
 				
 				$parameters = array( 
-					'to' => 'info@yourwebsite.com',
+					'to' => 'info@yourdomain.tld',
 					'name' => $_POST['name'],
 					'email' => $_POST['email'],				
 					'subject' => $_POST['subject'],
