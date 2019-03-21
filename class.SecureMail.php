@@ -301,7 +301,7 @@ class SecureMail
 		
 		if(isset($_SESSION['token'])) 
 		{ 
-			return $_SESSION['token']; 
+			return $this->clean($_SESSION['token'],'alphanum'); 
 			} else { 
 			return $token;
 		} 
