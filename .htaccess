@@ -1,0 +1,4 @@
+# Uncomment to enable. 
+# Unset the X PHP exposure headers. If it does not work, try editing your php.ini. 
+# php_flag mail.add_x_header Off
+# php_flag mail.add_x_header 0
