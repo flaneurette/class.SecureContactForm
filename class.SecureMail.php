@@ -86,7 +86,7 @@ class SecureMail
 	* @param array $params
 	* @throws Exception
 	*/	
-        public function init($params=[])
+    public function init($params=[])
         {
 		try {
 			isset($params['to'])         ? $this->fields['to']  = $params['to'] : self::DEFAULTTO; 
@@ -105,7 +105,7 @@ class SecureMail
 		} catch(Exception $e) {
 			$this->sessionmessage('Problem initializing:'.$e->getMessage());
 		}
-         }
+    }
 	/**
 	* Occurence of these field vectors is allowed only once.
 	* @var array
@@ -118,7 +118,7 @@ class SecureMail
 	* @var array
 	*/
 	public $bodyvectors = array(
-		'Return-Path','Content-Type','text/plain','MIME-Version','Content-Transfer-Encoding','Subject:','bcc:','<?php','<?'
+		'Return-Path','Content-Type','text/plain','MIME-Version','Content-Transfer-Encoding','Subject:','bcc:'
 	);
 	
 	/**
@@ -128,7 +128,7 @@ class SecureMail
 	public $disallowedchars = array(
 		'%0A','%0D','\u000A','\u000D','0x000d','0x000a','&#13;','&#10;','\r','\n',
 		';','<','>','`','~','$','%','/','\\','{','}','[',']','\'','"','=','-=','=-',
-		'<?','?>','<%','%>','!#','<<<','-C ','-O ','../','./'
+		'<?','?>','<%','%>','!#','<<<','../','./'
 	);
 	
 	/**
@@ -397,7 +397,7 @@ class SecureMail
 	public function clean($string,$method) {
 		
 		$buffer=self::MAXFIELDSIZE;
-		
+		// *only* use preg_replace, after we checked all fields for illegal characters, otherwise the regex may be exploited.
 		$data = '';
 		switch($method) {
 			case 'alpha':
