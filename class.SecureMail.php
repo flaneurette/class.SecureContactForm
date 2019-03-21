@@ -48,7 +48,7 @@ class SecureMail
 	const SUPRESSMAILERROR  	= true; 	// Prevents PHP mail errors. (recommended)
 	
 	private $sieve 			= 0;    // Empty sieve 
-	private $slots 			= 1000;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
+	private $slots 			= 10;    // Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
 	
 	### END OF CONFIGURATION 
 	
