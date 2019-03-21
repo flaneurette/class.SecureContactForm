@@ -144,6 +144,8 @@ class SecureMail
 				if(strlen($value) > self::MAXFIELDSIZE) { 
 					$this->sessionmessage('Issue found: length of characters inside field exceed the maximum of ' . self::MAXFIELDSIZE); 
 					$this->sieve++; 
+					// returning false already, in case of overflow.
+					return FALSE;
 				} 
 				
 				// check for disallowed chars
