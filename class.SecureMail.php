@@ -339,7 +339,7 @@ class SecureMail
 	public function sessionmessage($value) 
 	{ 
 		if(isset($_SESSION['mail_message'])) { 
-			array_push($_SESSION['mail_message'],$value);  
+			array_push($_SESSION['mail_message'],$this->clean($value,'encode'));  
 		} else { 
 			$_SESSION['mail_message'] = array(); 
 		} 
@@ -373,7 +373,8 @@ class SecureMail
 	*/
 	public function checkAddress($string) 
 	{
-		// with all the new domain name extensions we allow a for maximum 14.
+		// with all the new domain name extensions we allow a for maximum 14. 
+		// XXX deprecated.
 		if (preg_match('/^[A-Za-z0-9-_.+%]+@[A-Za-z0-9-.]+.[A-Za-z]{2,14}$/',$string)) {
 			return TRUE;
 			} else {
