@@ -37,7 +37,7 @@ class SecureMail
 	const OPTPARAM			= '-f'; 	// Optional 5th parameter.
 	
 	### ADVANCED
-	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions. 
+	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions: (htmlspecialchars, htmlentities) 
 	const MAXBODYSIZE 		= 5000; 	// Number of chars of body text.
 	const MAXFIELDSIZE 		= 50;   	// Number of allowed chars for single fields.
 	const FORMTIME			= 10;  		// Minimum time in seconds for a user to fill out a form, detects bots.
