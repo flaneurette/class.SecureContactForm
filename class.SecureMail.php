@@ -48,7 +48,7 @@ class SecureMail
 	const SUPRESSMAILERROR  	= true; 	// Prevents PHP mail errors. (recommended)
 	
 	private $sieve 			= 0;    // Empty sieve 
-	private $slots 			= 10;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
+	private $slots 			= 1000;    // Maximum number of mail slots per user, per browse session. Increase for testing purposes.                      
 	
 	### END OF CONFIGURATION 
 	
@@ -136,8 +136,9 @@ class SecureMail
 	* @return boolean
 	*/	
 	public function fieldScan() 
+	
 	{	
-		foreach($this->fields as $key => $value)  {
+		foreach(array_values($this->fields) as $key => $value)  {
 		
 				// check fieldsize.
 				if(strlen($value) > self::MAXFIELDSIZE) { 
@@ -339,11 +340,17 @@ class SecureMail
 	public function sessionmessage($value) 
 	{ 
 		if(isset($_SESSION['mail_message'])) { 
-			array_push($_SESSION['mail_message'],$this->clean($value,'encode'));  
+			array_push($_SESSION['mail_message'],$value);  
 		} else { 
 			$_SESSION['mail_message'] = array(); 
+			array_push($_SESSION['mail_message'],$value); 
 		} 
+		if(count($_SESSION['mail_message']) > 50) {
+			echo 'Fatal error: could not allocate any more session messages.';
+			exit;
+		}		
 	} 
+	
 	/**
 	* Dumps session messages
 	* @return void
@@ -373,8 +380,7 @@ class SecureMail
 	*/
 	public function checkAddress($string) 
 	{
-		// with all the new domain name extensions we allow a for maximum 14. 
-		// XXX deprecated.
+		// with all the new domain name extensions we allow a for maximum 14.
 		if (preg_match('/^[A-Za-z0-9-_.+%]+@[A-Za-z0-9-.]+.[A-Za-z]{2,14}$/',$string)) {
 			return TRUE;
 			} else {
