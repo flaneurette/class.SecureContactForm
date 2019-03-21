@@ -1,5 +1,12 @@
 <?php
 
+// optional security headers to coinsider.
+header("X-Frame-Options: DENY"); 
+header("X-XSS-Protection: 1; mode=block"); 
+header("Strict-Transport-Security: max-age=30");
+header("Referrer-Policy: same-origin");
+
+// secure cookie.
 session_start([
     'cookie_httponly' => true,
     'cookie_secure' => true
@@ -50,7 +57,6 @@ include("class.SecureMail.php");
 		
 		$token = $setup->getToken();
 		$_SESSION['token'] = $token;
-		
 		$time  = $setup->setTime();
 		$setup->clearmessages();
 	}
