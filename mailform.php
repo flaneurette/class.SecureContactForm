@@ -1,12 +1,15 @@
 <?php
 
-session_start(); 
+session_start([
+    'cookie_httponly' => true,
+    'cookie_secure' => true
+]);
 
 include("class.SecureMail.php");
 	
 	if(isset($_POST['token']))  {
 		
-			if($_POST['token'] == $_SESSION['token']) {
+			if($_POST['token'] === $_SESSION['token']) {
 				
 				$parameters = array( 
 					'to' => 'info@yourwebsite.com',
@@ -51,6 +54,7 @@ include("class.SecureMail.php");
 		$time  = $setup->setTime();
 		$setup->clearmessages();
 	}
+	
 ?>
 
 <h2>Secure mail form.</h2>
@@ -58,7 +62,7 @@ include("class.SecureMail.php");
 <form action="" method="post">
 <input type="hidden" name="token" value="<?php echo $token;?>">
 			<label for="name">Name:</label><br>
-				<input type="text" name="name" value="Jan Doe">
+				<input type="text" name="name" value="Jane Doe">
 				<p><!-- message --></p>
 			<label for="email">E-mail:</label><br>
 				<input type="text" name="email" value="jane.doe@website.com">
