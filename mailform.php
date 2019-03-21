@@ -1,6 +1,6 @@
 <?php
 
-// optional security headers to coinsider.
+// optional security headers to consider.
 header("X-Frame-Options: DENY"); 
 header("X-XSS-Protection: 1; mode=block"); 
 header("Strict-Transport-Security: max-age=30");
