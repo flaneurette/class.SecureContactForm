@@ -368,11 +368,11 @@ class SecureMail
 		
 		if (function_exists('random_bytes')) {
         		$bytes .= bin2hex(random_bytes(16));
-    	}
+    		}
 		
 		if (function_exists('openssl_random_pseudo_bytes')) {
         		$bytes .= bin2hex(openssl_random_pseudo_bytes(16));
-    	}	
+    		}	
 		
 		if(strlen($bytes) < 16) {
 			$bytes .= mt_rand(self::MINMERSENNE,self::MAXMERSENNE); 
