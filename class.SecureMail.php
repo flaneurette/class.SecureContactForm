@@ -94,7 +94,7 @@ class SecureMail
 	* @param array $params
 	* @throws Exception
 	*/	
-    public function init($params=[])
+    	public function init($params=[])
         {
 		try {
 			isset($params['to'])         ? $this->fields['to']  = $params['to'] : self::DEFAULTTO; 
@@ -113,7 +113,7 @@ class SecureMail
 		} catch(Exception $e) {
 			$this->sessionmessage('Problem initializing:'.$e->getMessage());
 		}
-    }
+    	}
 	/**
 	* Occurence of these field vectors is allowed only once.
 	* @var array
@@ -226,16 +226,16 @@ class SecureMail
 		$ip      = $this->clean($_SERVER['REMOTE_ADDR'],'field');
 		
 		$headers = [
-			'From'                      => self::SERVERADDR,
-			'Sender'                    => self::SERVERADDR,
-			'Return-Path'               => self::SERVERADDR,
-			'MIME-Version'              => self::MIMEVERSION,
-			'Content-Type'              => 'text/plain; charset='.self::CHARSET.'; format='.self::MAILFORMAT.'; delsp='.self::DELSP,
-			'Content-Language'			=> self::LANGUAGE,
-			'Content-Transfer-Encoding' => self::TRANSFERENCODING,
-			'X-Mailer'                  => self::XMAILER,
-			'Date'						=> date('r'),
-			'Message-Id'				=> $this->generateBytes(),
+			'From'                      	=> self::SERVERADDR,
+			'Sender'                    	=> self::SERVERADDR,
+			'Return-Path'               	=> self::SERVERADDR,
+			'MIME-Version'              	=> self::MIMEVERSION,
+			'Content-Type'              	=> 'text/plain; charset='.self::CHARSET.'; format='.self::MAILFORMAT.'; delsp='.self::DELSP,
+			'Content-Language'		=> self::LANGUAGE,
+			'Content-Transfer-Encoding' 	=> self::TRANSFERENCODING,
+			'X-Mailer'                  	=> self::XMAILER,
+			'Date'				=> date('r'),
+			'Message-Id'			=> $this->generateBytes(),
 		];
 		
 		if(self::SENSITIVITY == true) {
@@ -251,13 +251,12 @@ class SecureMail
 		if(self::REMOVEPHPHEADERS == true) {
 			try {
 				// Trying to remove sensitive headers. Experimental. for best result, edit php.ini.
-				header_remove('x-powered-by');
-				header_remove('X-PHP-Script');
-				$_SERVER['PHP_SELF'] = "/"; 
+				@header_remove('x-powered-by');
+				@header_remove('X-PHP-Script');
 				$_SERVER['REMOTE_ADDR'] = $_SERVER['SERVER_ADDR'];
 				$HTTP_SERVER_VARS['PHP_SELF'] = "/";
-				$_SERVER['PHP_SELF'] = '/';
 				$_SERVER['SCRIPT_FILENAME'] = '/';
+				$_SERVER['PHP_SELF'] = "/"; 
 				$_SERVER['REQUEST_URI'] = '/';
 				$_SERVER['SCRIPT_NAME'] = '/';
 			} catch(Exception $e) {
