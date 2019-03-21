@@ -31,13 +31,13 @@ class SecureMail
 	const XMAILER			= 'Secure Mail'; // Name class mailer.
 	const MIMEVERSION		= '1.0';	// Mime-type version
 	const TRANSFERENCODING 		= '8Bit';	// Transfer encoding, recommended: 8bits.
-	const CHARSET 			= 'UTF-8';	// Character set of expected e-mail, recommended: utf8.
+	const CHARSET 			= 'UTF-8';	// Characterset of expected e-mail, recommended: utf8.
 	const MAILFORMAT		= 'Flowed';  	// Fixed, Flowed. (rfc3676)
 	const DELSP			= 'Yes'; 	// Yes, No. (rfc3676)
 	const OPTPARAM			= '-f'; 	// Optional 5th parameter.
 	
 	### ADVANCED
-	
+	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions. 
 	const MAXBODYSIZE 		= 5000; 	// Number of chars of body text.
 	const MAXFIELDSIZE 		= 50;   	// Number of allowed chars for single fields.
 	const FORMTIME			= 10;  		// Minimum time in seconds for a user to fill out a form, detects bots.
@@ -418,10 +418,10 @@ class SecureMail
 				$this->data =  preg_replace("/[^[:alnum:][:space:]]/u", '', $string);
 			break;
 			case 'encode':
-				$this->data =  htmlspecialchars($string,ENT_QUOTES,'UTF-8');
+				$this->data =  htmlspecialchars($string,ENT_QUOTES,self::PHPENCODING);
 			break;
 			case 'entities':
-				$this->data =  htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+				$this->data =  htmlentities($string, ENT_QUOTES | ENT_HTML5, self::PHPENCODING);
 			break;			
 			case 'body':
 				$this->data =  strip_tags($string);
