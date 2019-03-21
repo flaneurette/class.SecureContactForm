@@ -383,6 +383,7 @@ class SecureMail
 	public function checkAddress($string) 
 	{
 		// with all the new domain name extensions we allow a for maximum 14.
+		// XXX depricated.
 		if (preg_match('/^[A-Za-z0-9-_.+%]+@[A-Za-z0-9-.]+.[A-Za-z]{2,14}$/',$string)) {
 			return TRUE;
 			} else {
@@ -397,9 +398,10 @@ class SecureMail
 	public function clean($string,$method) {
 		
 		$buffer=self::MAXFIELDSIZE;
-		// *only* use preg_replace, after we checked all fields for illegal characters, otherwise the regex may be exploited.
+		
 		$data = '';
 		switch($method) {
+			// *only* call preg_replace when a string already has been checked, this prevents regex exploits. 
 			case 'alpha':
 				$this->data =  preg_replace('/[^a-zA-Z]/','', $string);
 			break;
@@ -418,6 +420,9 @@ class SecureMail
 			case 'encode':
 				$this->data =  htmlspecialchars($string,ENT_QUOTES,'UTF-8');
 			break;
+			case 'entities':
+				$this->data =  htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+			break;			
 			case 'body':
 				$this->data =  strip_tags($string);
 			break;
