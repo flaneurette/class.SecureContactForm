@@ -299,12 +299,11 @@ class SecureMail
 		
 		$token = hash('sha512',$bytes);
 		
-		if(isset($_SESSION['token'])) 
+		if(isset($_SESSION['token']) && $_SESSION['token'] != false) 
 		{ 
-			if(strlen($_SESSION['token']) < 130) {
+			if(strlen($_SESSION['token']) < 128) {
 				$this->sessionmessage('Issue found: session token is too short.'); 
 				$this->sieve++; 
-				return FALSE;
 				} else {
 				return $this->clean($_SESSION['token'],'alphanum'); 
 			}
