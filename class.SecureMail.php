@@ -26,8 +26,8 @@ class SecureMail
 {
 	### CONFIGURATION 
 	const DOMAIN			= 'yourdomain.tld'; // Domain this script is hosted on.
-	const SERVERADDR		= 'server <server@localhost>'; // Server e-mail address.
-	const DEFAULTTO			= 'postmaster@localhost'; // default "to" e-mail address when address has not been provided.
+	const SERVERADDR		= 'server <server@yourdomain.tld>'; // Server e-mail address.
+	const DEFAULTTO			= 'info@yourdomain.tld'; // default "to" e-mail address when address has not been provided.
 	const XMAILER			= 'Secure Mail'; // Name class mailer.
 	const LANGUAGE			= 'en'; 	// en, fr, de, x-klingon. (rfc1766) 
 	const MIMEVERSION		= '1.0';	// Mime-type version
@@ -35,14 +35,11 @@ class SecureMail
 	const CHARSET 			= 'UTF-8';	// Characterset of expected e-mail, recommended: utf8.
 	const MAILFORMAT		= 'Flowed'; 	// Fixed, Flowed. (rfc3676)
 	const DELSP			= 'Yes'; 	// Yes, No. (rfc3676)
-	const OPTPARAM			= '-f'; 	// Optional 5th parameter. -f is required when DOMAIN is set.
+	const OPTPARAM			= '-f'; 	// Optional 5th parameter. -f is required when SERVERADDR is set.
 	const WORD_WRAP			= true;		// Wrap message?
 	const WORD_WRAP_VALUE		= 70;		// Wrap at line length.
 	const SENSITIVITY		= true;		// Enables sensitivity header.
 	const SENSITIVITY_VALUE		= 'Normal'; 	// Normal, Personal, Private and Company-Confidential.
-	const CUSTOMHEADER		= 'X-Klingon-Header-1'; // Optional, your own Header. The 'X-' part is required!
-	const CUSTOMHEADERVALUE		= 'JAJ VIGHAJ'; // Value of the custom Header. Klingon for: "Own the day." 
-	const REMOVEPHPHEADERS  	= false; 	// Experimental. Tries to remove X-PHP headers. To removes all PHP headers for certain, edit your php.ini: 'mail.add_x_header = Off'
 	
 	### ADVANCED
 	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions: (htmlspecialchars, htmlentities) 
@@ -55,8 +52,13 @@ class SecureMail
 	const MAXMERSENNE		= 0xffffffff; 	// Max. value of the Mersenne twister.
 	const SUPRESSMAILERROR  	= true; 	// Prevents PHP mail errors. (recommended)
 	
+	### EXPERIMENTAL
+	const CUSTOMHEADER		= 'X-Klingon-Header-1'; // Optional, your own Header. The 'X-' part is required!
+	const CUSTOMHEADERVALUE		= 'JAJ VIGHAJ'; // Value of the custom Header. Klingon for: "Own the day." 
+	const REMOVEPHPHEADERS  	= false; 	// Experimental. Tries to remove X-PHP headers. To removes all PHP headers for certain, edit your php.ini: 'mail.add_x_header = Off'
+		
 	private $sieve 			= 0;    // Empty sieve 
-	private $slots 			= 1000;	// Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
+	private $slots 			= 10;	// Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
 	
 	### END OF CONFIGURATION 
 	
