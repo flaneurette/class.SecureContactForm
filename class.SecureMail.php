@@ -301,9 +301,15 @@ class SecureMail
 		
 		if(isset($_SESSION['token'])) 
 		{ 
-			return $this->clean($_SESSION['token'],'alphanum'); 
-			} else { 
-			return $token;
+			if(strlen($_SESSION['token']) < 130) {
+				$this->sessionmessage('Issue found: session token is too short.'); 
+				$this->sieve++; 
+				return FALSE;
+				} else {
+				return $this->clean($_SESSION['token'],'alphanum'); 
+			}
+		} else { 
+		return $token;
 		} 
 	} 
   
