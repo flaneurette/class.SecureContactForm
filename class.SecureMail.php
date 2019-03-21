@@ -25,16 +25,24 @@ namespace security\forms;
 class SecureMail
 {
 	### CONFIGURATION 
-	
+	const DOMAIN			= 'yourdomain.tld'; // the domain this script is hosted on.
 	const SERVERADDR		= 'server <server@localhost>'; // Server e-mail address.
 	const DEFAULTTO			= 'postmaster@localhost'; // default "to" e-mail address when address has not been provided.
 	const XMAILER			= 'Secure Mail'; // Name class mailer.
+	const LANGUAGE			= 'en'; 		// en, fr, de, x-klingon. (rfc1766) 
 	const MIMEVERSION		= '1.0';	// Mime-type version
-	const TRANSFERENCODING 		= '8Bit';	// Transfer encoding, recommended: 8bits.
+	const TRANSFERENCODING 	= '8bit';	// Transfer encoding recommended: 8bit. (7bit, base64, quoted-printable)
 	const CHARSET 			= 'UTF-8';	// Characterset of expected e-mail, recommended: utf8.
-	const MAILFORMAT		= 'Flowed';  	// Fixed, Flowed. (rfc3676)
-	const DELSP			= 'Yes'; 	// Yes, No. (rfc3676)
-	const OPTPARAM			= '-f'; 	// Optional 5th parameter.
+	const MAILFORMAT		= 'Flowed'; // Fixed, Flowed. (rfc3676)
+	const DELSP				= 'Yes'; 	// Yes, No. (rfc3676)
+	const OPTPARAM			= '-f'; 	// Optional 5th parameter. -f is required when DOMAIN is set.
+	const WORD_WRAP			= true;		// Wrap message?
+	const WORD_WRAP_VALUE	= 70;		// Wrap at line length.
+	const SENSITIVITY		= true;		// Enables sensitivity header.
+	const SENSITIVITY_VALUE	= 'Normal'; // Normal, Personal, Private and Company-Confidential.
+	const CUSTOMHEADER		= 'X-Klingon-Header-1'; // Optional, your own Header. The 'X-' part is required!
+	const CUSTOMHEADERVALUE	= 'JAJ VIGHAJ'; // Value of the custom Header. Klingon for: "Own the day." 
+	const REMOVEPHPHEADERS  = false; // Experimental. Tries to remove X-PHP headers. To removes all PHP headers for certain, edit your php.ini: 'mail.add_x_header = Off'
 	
 	### ADVANCED
 	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions: (htmlspecialchars, htmlentities) 
@@ -45,10 +53,10 @@ class SecureMail
 	const MAXHASHBYTES		= 64; 		// Max. of bytes for secure hash, more increases cost. Max. recommended: 256 bytes.
 	const MINMERSENNE		= 0xff; 	// Min. value of the Mersenne twister.
 	const MAXMERSENNE		= 0xffffffff; 	// Max. value of the Mersenne twister.
-	const SUPRESSMAILERROR  	= true; 	// Prevents PHP mail errors. (recommended)
+	const SUPRESSMAILERROR  = true; 	// Prevents PHP mail errors. (recommended)
 	
 	private $sieve 			= 0;    // Empty sieve 
-	private $slots 			= 10;    // Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
+	private $slots 			= 1000;	// Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
 	
 	### END OF CONFIGURATION 
 	
@@ -216,21 +224,55 @@ class SecureMail
 		$subject = $this->clean($this->fields['subject'],'field');
 		$message = $this->clean($this->fields['body'],'body');
 		$ip      = $this->clean($_SERVER['REMOTE_ADDR'],'field');
-	
+		
 		$headers = [
 			'From'                      => self::SERVERADDR,
 			'Sender'                    => self::SERVERADDR,
 			'Return-Path'               => self::SERVERADDR,
 			'MIME-Version'              => self::MIMEVERSION,
 			'Content-Type'              => 'text/plain; charset='.self::CHARSET.'; format='.self::MAILFORMAT.'; delsp='.self::DELSP,
+			'Content-Language'			=> self::LANGUAGE,
 			'Content-Transfer-Encoding' => self::TRANSFERENCODING,
 			'X-Mailer'                  => self::XMAILER,
+			'Date'						=> date('r'),
+			'Message-Id'				=> $this->generateBytes(),
 		];
+		
+		if(self::SENSITIVITY == true) {
+			$custom = array('Sensitivity' => self::SENSITIVITY_VALUE);
+			$headers = array_merge($headers,$custom);
+		}			
+			
+		if(self::CUSTOMHEADERVALUE != 'JAJ VIGHAJ') {
+			$custom = array(self::CUSTOMHEADER => self::CUSTOMHEADERVALUE);
+			$headers = array_merge($headers,$custom);
+		}	
+	
+		if(self::REMOVEPHPHEADERS == true) {
+			try {
+				// Trying to remove sensitive headers. Experimental. for best result, edit php.ini.
+				header_remove('x-powered-by');
+				header_remove('X-PHP-Script');
+				$_SERVER['PHP_SELF'] = "/"; 
+				$_SERVER['REMOTE_ADDR'] = $_SERVER['SERVER_ADDR'];
+				$HTTP_SERVER_VARS['PHP_SELF'] = "/";
+				$_SERVER['PHP_SELF'] = '/';
+				$_SERVER['SCRIPT_FILENAME'] = '/';
+				$_SERVER['REQUEST_URI'] = '/';
+				$_SERVER['SCRIPT_NAME'] = '/';
+			} catch(Exception $e) {
+			$this->sessionmessage('Headers could not be unset:'.$e->getMessage());
+			}
+		}
 		
 		foreach ($headers as $key => $value) {
 			$mime_headers[] = "$key: $value";
 		}
 		$mail_headers = join("\n", $mime_headers);
+		
+		if(self::WORD_WRAP == true) {
+			$message = wordwrap($message, self::WORD_WRAP_VALUE, "\r\n");
+		}
 		
 		if(self::SUPRESSMAILERROR == true) {
 			$send = @mail($to, $subject, $message, $mail_headers, self::OPTPARAM . $from);
@@ -314,7 +356,35 @@ class SecureMail
 		return $token;
 		} 
 	} 
-  
+	
+ 	/**
+	* Generates psuedo random bytes for the message-id.
+	* @return mixed string.
+	*/
+	public function generateBytes()
+	{
+		$bytes = '';
+		
+		if (function_exists('random_bytes')) {
+        		$bytes .= bin2hex(random_bytes(16));
+    	}
+		
+		if (function_exists('openssl_random_pseudo_bytes')) {
+        		$bytes .= bin2hex(openssl_random_pseudo_bytes(16));
+    	}	
+		
+		if(strlen($bytes) < 16) {
+			$bytes .= mt_rand(self::MINMERSENNE,self::MAXMERSENNE); 
+			$bytes .= mt_rand(self::MINMERSENNE,self::MAXMERSENNE); 
+			$bytes .= mt_rand(self::MINMERSENNE,self::MAXMERSENNE); 
+			$bytes .= mt_rand(self::MINMERSENNE,self::MAXMERSENNE); 
+		}
+		
+		$pseudobytes = substr($bytes,0,16);
+		
+		return sprintf("<%s.%s@%s>", base_convert(microtime(), 10, 36), base_convert(bin2hex($pseudobytes), 16, 36), $this->clean(self::DOMAIN,'domain'));
+	}
+	
 	/**
 	* Allocates the maximum mail slots.
 	* @return mixed boolean, void.
@@ -422,7 +492,10 @@ class SecureMail
 			break;
 			case 'entities':
 				$this->data =  htmlentities($string, ENT_QUOTES | ENT_HTML5, self::PHPENCODING);
-			break;			
+			break;
+			case 'domain':
+				$this->data =  str_replace(array('http://','www.'),array('',''),$string);
+			break;				
 			case 'body':
 				$this->data =  strip_tags($string);
 			break;
