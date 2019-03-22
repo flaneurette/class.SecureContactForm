@@ -47,7 +47,7 @@ The Code Flow Chain of securing an application is as follows, albeit, in a very 
 	1. Check the length of user-input. If too large, **exit** script or return false. Do nothing else.
 5. Prevent code injection. 
 	1. Detection comes before processing user-data. 
-	2. All user and server supplied variables must be checked first in this chain-link.
+	2. All user and server supplied variables must be checked first in this chain-link. (do not trust any variable)
 	3. Create a secure loop, check the array size first and cast the array to it's keys and values.
 	4. Avoid most PHP functions, avoid RegExing. Stick to tight functions like: stristr() to find a char. (security != poetry)
 	5. Check for certain characters we wish to detect. Do not replace them, as this can lead to RegEx exploiting. 
