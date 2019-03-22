@@ -34,21 +34,22 @@ The Code Flow Chain of securing an application is as follows, albeit, in a very 
 
 1. Create a tight secure environment or container: Initiate a unique session, set a secure cookie and additional security headers. 
 2. Prevent automation:
-	1. Allocate a session with a number of slots. For example: we allow 2 e-mails per user per day.
+	1. Allocate a session with a number of slots. For example: we allow 2 e-mails per user per day. If slots exceeded: **exit**
 	2. Use a timer to measure how much time a user or bot spent on the form, if too short we assume it is automated. 
 	We use the strength of bots -which is automation and impatience of the attacker- against itself. 
-	It is rather expensive for a bot to wait 10 seconds on each form.
+	It is rather expensive for a bot to wait 10 seconds on each form. If bot has been detected: **exit**
 3. Prevent CSRF: generate and set a unique secure token by generating pseudo random bytes. 
 	1. On submitting the form, first check if the token was received and compare it against the session token.
-	if these are both invalid, exit script or return false.
+	if these are both invalid, **exit** script or return false.
 4. Prevent overflow: 
-	1. Check the length of user-input. If too large, exit script or return false. Do nothing else.
+	1. Check the length of user-input. If too large, **exit** script or return false. Do nothing else.
 5. Prevent code injection: 
 	1. All user and server supplied variables must be checked first in this chain-link.
-	2. Avoid most PHP functions, avoid RegExing. Stick to tight functions like: stristr() to find a char. 
-	3. Check for certain characters we wish to detect. Do not replace them, as this can lead to RegEx exploiting. 
-	Instead, we detect and if we find an illegal character, exit script or return false. 
-	4. Create a secure loop, check the array size first and cast the array to it's keys and values.
+	2. Create a secure loop, check the array size first and cast the array to it's keys and values.
+	3. Avoid most PHP functions, avoid RegExing. Stick to tight functions like: stristr() to find a char. 
+	4. Check for certain characters we wish to detect. Do not replace them, as this can lead to RegEx exploiting. 
+	Instead, we detect and if we find an illegal character, **exit** script or return false. 
+	
 6. Sanitizing data:
 	1. If the chain is unbroken at this step, we can proceeded sanitizing user (and server) supplied data.
 	2. Try not to be too clever: if we are here, we already know that most characters we look for were detected in step 4.
