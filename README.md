@@ -49,12 +49,11 @@ The Code Flow Chain of securing an application is as follows, albeit, in a very 
 	3. Avoid most PHP functions, avoid RegExing. Stick to tight functions like: stristr() to find a char. 
 	4. Check for certain characters we wish to detect. Do not replace them, as this can lead to RegEx exploiting. 
 	Instead, we detect and if we find an illegal character, **exit** script or return false. 
-	
 6. Sanitizing data:
 	1. If the chain is unbroken at this step, we can proceeded sanitizing user (and server) supplied data.
 	2. Try not to be too clever: if we are here, we already know that most characters we look for were detected in step 4.
-	3. Avoid most PHP functions, avoid RegExing. Stick to tight and low functions: htmlspcialchars, htmlentities or str_replace()
-		1. 1st preference flow: Encode it. (htmlspecialchars, htmlentities) as to make it no-executable.
+	3. Avoid most PHP functions, avoid RegExing. Stick to tight and low functions: htmlspcialchars, htmlentities or str_ireplace()
+		1. 1st preference flow: Encode it. (htmlspecialchars, htmlentities) as to make it non-executable.
 		2. Alternative hard flow: Remove certain characters: str_ireplace(). Do not replace tags or markup, 
 		as it can lead to injection. Instead, encode it so that it cannot be either interpreted or rendered.
 7. Logging and handling.
