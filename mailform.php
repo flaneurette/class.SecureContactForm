@@ -20,7 +20,7 @@ session_start([
 include("class.SecureMail.php");
 	
 	if(isset($_POST['token']))  {
-			// The token was provides through the form. check if it is the same as our session token.
+			// A token was provided through $_POST data. Check if it is the same as our session token.
 			if($_POST['token'] === $_SESSION['token']) {
 				// The submitted token appears to be similar as the session token we set. Obtain $_POST data.   
 				$parameters = array( 
@@ -36,13 +36,14 @@ include("class.SecureMail.php");
 				$spent_time = $checkForm->getTime();
 				
 				if($spent_time == true) {
-					// Enought time has been spent, proceed scanning the $_POST data.
+					// Enough time has been spent, proceed scanning the $_POST data.
 					$scan = $checkForm->fullScan(); 
-
+						// Did the scan found something?
 						if($scan != FALSE) {
 							// The class decided the $_POST data was correct. 
 							// Start sending the mail.
 							$checkForm->sendmail();
+							// Show a message.
 							$checkForm->sessionmessage('Mail sent!'); 
 							// Initiate a new token.
 							$token = $checkForm->getToken();
