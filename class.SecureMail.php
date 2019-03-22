@@ -40,8 +40,6 @@ class SecureMail
 	const OPTPARAM			= '-f'; 	// Optional 5th parameter. -f is required when SERVERADDR is set.
 	const WORD_WRAP			= true;		// Wrap message?
 	const WORD_WRAP_VALUE		= 70;		// Wrap at line length.
-	const SENSITIVITY		= true;		// Enables sensitivity header.
-	const SENSITIVITY_VALUE		= 'Normal'; 	// Normal, Personal, Private and Company-Confidential.
 	
 	### ADVANCED CONFIGURATION
 	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions: (htmlspecialchars, htmlentities) 
@@ -55,7 +53,9 @@ class SecureMail
 	const SUPRESSMAILERROR  	= true; 	// Prevents PHP mail errors. (recommended)
 	
 	### EXPERIMENTAL CONFIGURATION
-	const CUSTOMHEADER		= 'X-Klingon-Header-1'; // Optional, your own Header. The 'X-' part is required!
+	const SENSITIVITY		= true;		// Enables sensitivity header.
+	const SENSITIVITY_VALUE		= 'Normal'; 	// Normal, Personal, Private and Company-Confidential.
+	const CUSTOMHEADER		= 'X-Klingon-Header-1'; // Optional, your own Header. The 'X-' part is required! (disabled by default)
 	const CUSTOMHEADERVALUE		= 'JAJ VIGHAJ'; // Value of the custom Header. Klingon for: "Own the day." 
 	const REMOVEPHPHEADERS  	= false; 	// Experimental. Tries to remove X-PHP headers. To removes all PHP headers for certain, edit your php.ini: 'mail.add_x_header = Off'
 		
