@@ -497,7 +497,7 @@ class SecureMail
 				$this->data =  htmlentities($string, ENT_QUOTES | ENT_HTML5, self::PHPENCODING);
 			break;
 			case 'domain':
-				$this->data =  str_replace(array('http://','www.'),array('',''),$string);
+				$this->data =  str_ireplace(array('http://','www.'),array('',''),$string);
 			break;				
 			case 'body':
 				$this->data =  strip_tags($string);
