@@ -47,8 +47,8 @@ The Code Flow Chain of securing an application is as follows, albeit, in a very 
 5. Prevent automation:
 	1. Allocate a session with a number slots. (This can be done anywhere in the script.)
 	2. Use a timer to measure how much time a user or bot spent on the form, if too short we assume it is automated. 
-	We use the strength of bots -which is automation and impatience- against itself. It is rather expensive for a bot 
-	to wait 10 seconds on each form.
+	We use the strength of bots -which is automation and impatience of the attacker- against itself. 
+	It is rather expensive for a bot to wait 10 seconds on each form.
 6. Sanitizing data:
 	1. If the chain is unbroken at this step, we can proceeded sanitizing user (and server) supplied data.
 	2. Try not to be too clever: if we are here, we already know that most characters we look for were detected in step 4.
