@@ -35,7 +35,7 @@ The chain of security is called "Code Flow Chain" (CFC), it is a conditional flo
 The Code Flow Chain of securing an application is as follows, albeit, in a very simplified way from strongest to weakest attack:
 
 1. Create a tight secure environment or container: Initiate a unique session, set a secure cookie and additional security headers. 
-2. Prevent automation:
+2. Prevent automation: (slowing down)
 	1. Allocate a session with a number of slots. For example: we allow 2 e-mails per user per day. If slots exceeded: **exit**
 	2. Use a timer to measure how much time a user or bot spent on the form, if too short we assume it is automated. 
 	We use the strength of bots -which is automation and impatience of the attacker- against itself. 
