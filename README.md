@@ -45,7 +45,7 @@ The Code Flow Chain of securing an application is as follows, albeit, in a very 
 	Instead, we detect and if we find an illegal character, exit script or return false. 
 	4. Create a secure loop, check the array size first and cast the array to it's keys and values.
 5. Prevent automation:
-	1. Allocate a session with a number slots. (This can be done anywhere in the script.)
+	1. Allocate a session with a number of slots. For example: we allow 2 e-mails per user per day.
 	2. Use a timer to measure how much time a user or bot spent on the form, if too short we assume it is automated. 
 	We use the strength of bots -which is automation and impatience of the attacker- against itself. 
 	It is rather expensive for a bot to wait 10 seconds on each form.
