@@ -40,12 +40,12 @@ class SecureMail
 	const OPTPARAM			= '-f'; 	// Optional 5th parameter. -f is required when SERVERADDR is set.
 	const WORD_WRAP			= true;		// Wrap message?
 	const WORD_WRAP_VALUE		= 70;		// Wrap at line length.
-	
-	### ADVANCED CONFIGURATION
-	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions: (htmlspecialchars, htmlentities) 
 	const MAXBODYSIZE 		= 5000; 	// Number of chars of body text.
 	const MAXFIELDSIZE 		= 50;   	// Number of allowed chars for single fields.
 	const FORMTIME			= 10;  		// Minimum time in seconds for a user to fill out a form, detects bots.
+	
+	### ADVANCED CONFIGURATION
+	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions: (htmlspecialchars, htmlentities) 
 	const MINHASHBYTES		= 32; 		// Min. of bytes for secure hash.
 	const MAXHASHBYTES		= 64; 		// Max. of bytes for secure hash, more increases cost. Max. recommended: 256 bytes.
 	const MINMERSENNE		= 0xff; 	// Min. value of the Mersenne twister.
