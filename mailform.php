@@ -1,6 +1,6 @@
 <?php
 
-// Error reporting.
+// Error reporting (only for testing, disbale when going live).
 ini_set('display_errors', 1); 
 error_reporting(E_ALL);
 
@@ -10,17 +10,19 @@ header("X-XSS-Protection: 1; mode=block");
 header("Strict-Transport-Security: max-age=30");
 header("Referrer-Policy: same-origin");
 
+// Start our session.
 session_start([
     'cookie_httponly' => true,
     'cookie_secure' => true
 ]);
 
+// Include our class, optional: make it required.
 include("class.SecureMail.php");
 	
 	if(isset($_POST['token']))  {
-		
+			// The token was provides through the form. check if it is the same as our session token.
 			if($_POST['token'] === $_SESSION['token']) {
-				
+				// The submitted token appears to be similar as the session token we set. Obtain $_POST data.   
 				$parameters = array( 
 					'to' => 'info@yourdomain.tld',
 					'name' => $_POST['name'],
@@ -28,25 +30,30 @@ include("class.SecureMail.php");
 					'subject' => $_POST['subject'],
 					'body' => $_POST['body']
 				);
-				
+				// Proceed to check the $_POST data.
 				$checkForm = new \security\forms\SecureMail($parameters);
-				
+				// Start the script timer.
 				$spent_time = $checkForm->getTime();
 				
 				if($spent_time == true) {
-					
+					// Enought time has been spent, proceed scanning the $_POST data.
 					$scan = $checkForm->fullScan(); 
 
-					if($scan != FALSE) {
-						$checkForm->sendmail();
-						$checkForm->sessionmessage('Mail sent!'); 
-						$token = $checkForm->getToken();
-						} else {
-						$checkForm->sessionmessage('Mail not sent.');
-					}
+						if($scan != FALSE) {
+							// The class decided the $_POST data was correct. 
+							// Start sending the mail.
+							$checkForm->sendmail();
+							$checkForm->sessionmessage('Mail sent!'); 
+							// Initiate a new token.
+							$token = $checkForm->getToken();
+							} else {
+							// The class found something, we cannot send the mail.
+							$checkForm->sessionmessage('Mail not sent.');
+						}
 				}
 				
 			} else {
+				// The provided token did not match with our session token.
 				$checkForm->sessionmessage('Invalid token.'); 
 			}
 	
@@ -54,13 +61,15 @@ include("class.SecureMail.php");
 	$checkForm->showmessage();
 	
 	} else {
-		
-		// setup new secure mail form.
+		// Setup new secure mail form.
 		$setup = new \security\forms\SecureMail();
-		
+		// Create a secure token.
 		$token = $setup->getToken();
+		// Place the token inside a server-side session.
 		$_SESSION['token'] = $token;
+		// Create some time.
 		$time  = $setup->setTime();
+		// Clear any previous sessions messages.
 		$setup->clearmessages();
 	}
 	
