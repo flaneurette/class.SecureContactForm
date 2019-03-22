@@ -2,6 +2,9 @@
 
 A Secure mail class and contact form for PHP. See the mailform.php for a complete example.
 
+Since the beginning of the internet, securing a contact-form has been a notoriously difficult theme with regards to webapplication security. This class aims at tackling it in a practical and easy to understand way. The class uses the php internal mail function, a sendmail/qmail extension is planned. 
+
+
 # Simple implementation:
 
     include("class.SecureMail.php");
