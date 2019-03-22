@@ -30,25 +30,25 @@ Since the beginning of the internet, securing a contact-form has been a notoriou
 
 The chain of security is called "Code Flow Chain" (CFC), it is a conditional flowing chain which follows a set of strict rules and quickly returns on the least expensive condition, as it flows back from the strongest to the weakest link in that chain. A simple flow chain can be such: Detect the strongest attack first, then Exit & Report. For example: We might consider that a brute force attack (automation) is the strongest attack, and so we focus on that chain first before we do anything else like handling user data, which then can overflow.
 
-The Code Flow Chain of securing an application is as follows, albeit, in a very simplified way:
+The Code Flow Chain of securing an application is as follows, albeit, in a very simplified way from strongest to weakest attack:
 
 1. Create a tight secure environment or container: Initiate a unique session, set a secure cookie and additional security headers. 
-2. Prevent CSRF: generate and set a unique secure token by generating pseudo random bytes. 
+2. Prevent automation:
+	1. Allocate a session with a number of slots. For example: we allow 2 e-mails per user per day.
+	2. Use a timer to measure how much time a user or bot spent on the form, if too short we assume it is automated. 
+	We use the strength of bots -which is automation and impatience of the attacker- against itself. 
+	It is rather expensive for a bot to wait 10 seconds on each form.
+3. Prevent CSRF: generate and set a unique secure token by generating pseudo random bytes. 
 	1. On submitting the form, first check if the token was received and compare it against the session token.
 	if these are both invalid, exit script or return false.
-3. Prevent overflow: 
+4. Prevent overflow: 
 	1. Check the length of user-input. If too large, exit script or return false. Do nothing else.
-4. Prevent injection: 
+5. Prevent code injection: 
 	1. All user and server supplied variables must be checked first in this chain-link.
 	2. Avoid most PHP functions, avoid RegExing. Stick to tight functions like: stristr() to find a char. 
 	3. Check for certain characters we wish to detect. Do not replace them, as this can lead to RegEx exploiting. 
 	Instead, we detect and if we find an illegal character, exit script or return false. 
 	4. Create a secure loop, check the array size first and cast the array to it's keys and values.
-5. Prevent automation:
-	1. Allocate a session with a number of slots. For example: we allow 2 e-mails per user per day.
-	2. Use a timer to measure how much time a user or bot spent on the form, if too short we assume it is automated. 
-	We use the strength of bots -which is automation and impatience of the attacker- against itself. 
-	It is rather expensive for a bot to wait 10 seconds on each form.
 6. Sanitizing data:
 	1. If the chain is unbroken at this step, we can proceeded sanitizing user (and server) supplied data.
 	2. Try not to be too clever: if we are here, we already know that most characters we look for were detected in step 4.
