@@ -30,7 +30,7 @@ Since the beginning of the internet, securing a contact-form has been a notoriou
 
 The chain of security is called "Code Flow Chain" (CFC), it is a conditional flowing chain which follows a set of strict rules and quickly returns on the least expensive condition, as it flows back from the strongest to the weakest link in that chain. A simple flow chain can be such: Detect the strongest attack first, then Exit & Report. For example: We might consider that a brute force attack (automation) is the strongest attack, and so we focus on that chain first before we do anything else like handling user data, which then can overflow.
 
-The sobering facts: 100% security does not exist. All we can do is slow things down, making an attack too expensive and avoid the obvious. Also, security is not code poetry. It isn't pretty! More often than not, it involves sticking to the very basics and being strict in how the code is supposed to flow. 
+The sobering facts: 100% security does not exist. All we can do is slow things down, making an attack too expensive and avoid the obvious. Also, security is not code poetry. It isn't pretty! More often than not, it involves sticking to the very basics and being strict in how the code is supposed to flow, leaving little room for inspired creative outbursts. 
 
 The Code Flow Chain of securing an application is as follows, albeit, in a very simplified way from strongest to weakest attack:
 
