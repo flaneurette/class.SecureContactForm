@@ -1,6 +1,6 @@
 <?php
 
-// Error reporting (only for testing, disbale when going live).
+// Error reporting (only for testing, disable when going live).
 ini_set('display_errors', 1); 
 error_reporting(E_ALL);
 
@@ -68,7 +68,7 @@ include("class.SecureMail.php");
 		$token = $setup->getToken();
 		// Place the token inside a server-side session.
 		$_SESSION['token'] = $token;
-		// Create some time.
+		// Create some time to track how long a user takes to complete the form.
 		$time  = $setup->setTime();
 		// Clear any previous sessions messages.
 		$setup->clearmessages();
