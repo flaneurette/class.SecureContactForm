@@ -45,6 +45,7 @@ include("class.SecureMail.php");
 							$checkForm->sendmail();
 							// Show a message.
 							$checkForm->sessionmessage('Mail sent!'); 
+							$checkForm->sessionDestroy();
 							// Initiate a new token.
 							$token = $checkForm->getToken();
 							} else {
@@ -56,6 +57,7 @@ include("class.SecureMail.php");
 			} else {
 				// The provided token did not match with our session token.
 				$checkForm->sessionmessage('Invalid token.'); 
+				$checkForm->sessionDestroy();
 			}
 	
 	// Show all session messages.
