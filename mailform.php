@@ -45,7 +45,8 @@ include("class.SecureMail.php");
 							$checkForm->sendmail();
 							// Show a message.
 							$checkForm->sessionmessage('Mail sent!'); 
-							$checkForm->sessionDestroy();
+							// Destroy the old token.
+							$checkForm->destroyToken();
 							// Initiate a new token.
 							$token = $checkForm->getToken();
 							} else {
