@@ -32,7 +32,7 @@ include("class.SecureMail.php");
 				);
 				// Proceed to check the $_POST data.
 				$checkForm = new \security\forms\SecureMail($parameters);
-				// Start the script timer.
+				// Check the script timer to see how much time was spent.
 				$spent_time = $checkForm->getTime();
 				
 				if($spent_time == true) {
