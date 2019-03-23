@@ -361,6 +361,25 @@ class SecureMail
 	} 
 	
  	/**
+	* Destroys the previously set token.
+	* @return mixed string.
+	*/
+	public function destroyToken()
+	{
+		try {
+			if(isset($_SESSION['token'])) {
+				$_SESSION['token'] = ''
+				session_unset();
+				session_destroy();
+			}
+		} catch(Exception $e) {
+			$this->sessionmessage('Issue: session could not be destroyed, '.$e->getMessage());
+			return FALSE;
+		}
+		return TRUE;
+	}
+	
+ 	/**
 	* Generates psuedo random bytes for the message-id.
 	* @return mixed string.
 	*/
