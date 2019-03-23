@@ -58,7 +58,10 @@ include("class.SecureMail.php");
 			} else {
 				// The provided token did not match with our session token.
 				$checkForm->sessionmessage('Invalid token.'); 
-				$checkForm->sessionDestroy();
+				// Destroy the old token.
+				$checkForm->destroyToken();
+				// Initiate a new token.
+				$token = $checkForm->getToken();
 			}
 	
 	// Show all session messages.
