@@ -289,12 +289,22 @@ class SecureMail
 	* Detect robot through various tests. If found, we (intend to) show a captcha.
 	* @return mixed boolean. TRUE if detected.
 	*/
-	function detectrobot() {
+	public function detectrobot() {
 
-		$size = strlen($_SERVER['REQUEST_METHOD']);
+		$sizeRm = strlen($_SERVER['REQUEST_METHOD']);
 		$allowedMethods = array('POST','GET');
-
-		if($size > 12 || $size < 2) {
+		
+		$useragent = $_SERVER['HTTP_USER_AGENT'];
+		$sizeUa = strlen($useragent);
+		
+		$port = $_SERVER['REMOTE_PORT'];
+		$ports = array(80, 443, 808, 3128, 8080, 8118, 1080);
+		
+		// disallowed user-agents.
+		$find = array('java','curl','wget','winhttp','HTTrack','chromeframe','clshttp','archiver','loader','email',
+		'harvest','extract','exploit','grab','miner','metasploit','libwww','curl','wget','python','nikto','scan');
+		
+		if($sizeRm > 12 || $sizeRm < 2) {
 			return TRUE;
 			} else {
 			// Find request method.
@@ -304,26 +314,19 @@ class SecureMail
 		}
 
 		// Scan the port for proxy.
-		$ports = array(80, 443, 808, 3128, 8080, 8118, 1080);
-
-		if(in_array($_SERVER['REMOTE_PORT'],$ports)) {
+		if(in_array($port,$ports)) {
 			return TRUE;
 		}
 
-		$useragent = $_SERVER['HTTP_USER_AGENT'];
-		$size = strlen($_SERVER['HTTP_USER_AGENT']);
-
-		if(isset($_SERVER['HTTP_USER_AGENT'])) {
+		if(isset($useragent)) {
 				// Check maximum and minimum size of user-agent.
-				if($size > 512 || $size < 2) {
+				if($sizeUa > 512 || $sizeUa < 2) {
 					return TRUE;
 				}
 			} else {
 			return TRUE;
 		}
-
-		$find = array('java','curl','wget','winhttp','HTTrack','chromeframe','clshttp','archiver','loader','email','harvest','extract','exploit','grab','miner','metasploit','libwww','curl','wget','python','nikto','scan');
-
+		
 		foreach($find as $key) {
 			if(stristr($useragent, $key)) {
 				return TRUE;
