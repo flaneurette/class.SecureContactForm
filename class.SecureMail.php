@@ -285,6 +285,87 @@ class SecureMail
 		return TRUE;
 	}
 	
+	/**
+	* Detect robot through various tests. If found, we (intend to) show a captcha.
+	* @return mixed boolean. TRUE if detected.
+	*/
+	function detectrobot() {
+
+		$size = strlen($_SERVER['REQUEST_METHOD']);
+		$allowedMethods = array('POST','GET');
+
+		if($size > 12 || $size < 2) {
+			return TRUE;
+			} else {
+			// Find request method.
+			if(!in_array($_SERVER['REQUEST_METHOD'],$allowedMethods)) {
+			return TRUE;
+			}
+		}
+
+		// Scan the port for proxy.
+		$ports = array(80, 443, 808, 3128, 8080, 8118, 1080);
+
+		if(in_array($_SERVER['REMOTE_PORT'],$ports)) {
+			return TRUE;
+		}
+
+		$useragent = $_SERVER['HTTP_USER_AGENT'];
+		$size = strlen($_SERVER['HTTP_USER_AGENT']);
+
+		if(isset($_SERVER['HTTP_USER_AGENT'])) {
+				// Check maximum and minimum size of user-agent.
+				if($size > 512 || $size < 2) {
+					return TRUE;
+				}
+			} else {
+			return TRUE;
+		}
+
+		$find = array('java','curl','wget','winhttp','HTTrack','chromeframe','clshttp','archiver','loader','email','harvest','extract','exploit','grab','miner','metasploit','libwww','curl','wget','python','nikto','scan');
+
+		foreach($find as $key) {
+			if(stristr($useragent, $key)) {
+				return TRUE;
+				break;
+			}
+
+		} 
+
+		// Detect proxy.
+		$proxy = array(
+			'HTTP_VIA',
+			'VIA',
+			'PROXY',
+			'Proxy-Connection',
+			'HTTP_X_FORWARDED_FOR',  
+			'HTTP_FORWARDED_FOR',
+			'HTTP_X_FORWARDED',
+			'HTTP_FORWARDED',
+			'HTTP_CLIENT_IP',
+			'HTTP_FORWARDED_FOR_IP',
+			'X-PROXY-ID',
+			'MT-PROXY-ID',
+			'X-TINYPROXY',
+			'X_FORWARDED_FOR',
+			'FORWARDED_FOR',
+			'X_FORWARDED',
+			'FORWARDED',
+			'CLIENT-IP',
+			'CLIENT_IP',
+			'PROXY-AGENT',
+			'HTTP_X_CLUSTER_CLIENT_IP',
+			'FORWARDED_FOR_IP',
+			'HTTP_PROXY_CONNECTION');
+
+		foreach($proxy as $value){
+			if (isset($_SERVER[$value])) {
+				return TRUE;
+			}
+		}
+
+	}
+	
   	/**
 	* Allocates a timeslot. If the form is submited under 10 seconds, we can assume it's a bot.
 	* @return mixed boolean, void.
