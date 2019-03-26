@@ -382,37 +382,37 @@ class SecureMail
 	public function detectrobot() {
 
 		$requestMethod 	= $_SERVER['REQUEST_METHOD'];
-		$userAgent 	= $_SERVER['HTTP_USER_AGENT'];
-		$port		= $_SERVER['REMOTE_PORT'];
+		$userAgent 		= $_SERVER['HTTP_USER_AGENT'];
+		$port			= $_SERVER['REMOTE_PORT'];
 		
 		$sizeRm = strlen($requestMethod);
 		$sizeUa = strlen($userAgent);
 		
-		if($sizeRm > 12 || $sizeRm < 2) {
+		if($sizeRm > 12 || $sizeRm < 2) { 
 			return TRUE;
 			} else {
 			// Find request method.
-			if(!in_array($requestMethod,self::REQUESTMETHODS)) {
+			if(!in_array($requestMethod,self::REQUESTMETHODS)) { 
 			return TRUE;
 			}
 		}
 
 		// Scan the port for proxy.
 		if(in_array($port,self::PROXYPORTS)) {
+			
 			return TRUE;
 		}
 
-		if(isset($useragent)) {
+		if(isset($userAgent)) {
 				// Check maximum and minimum size of user-agent.
 				if($sizeUa > 512 || $sizeUa < 2) {
 					return TRUE;
 				}
 			} else {
-			return TRUE;
 		}
 		
 		foreach(self::DISALLOWEDAGENTS as $key) {
-			if(stristr($useragent, $key)) {
+			if(stristr($userAgent, $key)) {
 				return TRUE;
 				break;
 			}
@@ -467,6 +467,7 @@ class SecureMail
 	*/
 	public function getToken()
 	{
+		
 		$bytes = 0;
 		
 		if (function_exists('random_bytes')) {
