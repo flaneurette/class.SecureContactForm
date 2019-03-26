@@ -74,13 +74,13 @@ class SecureMail
 		1080
 	]; 
 	
-	// Allowed request methods to access the form.
+	// Allowed request methods to access the form. GET is required. 
 	const REQUESTMETHODS = [
 		'POST',
 		'GET'
 	]; 
 	
-	// Attempts to find robots.
+	// Attempts to find fragments of robots.
 	const DISALLOWEDAGENTS = [
 		'java',
 		'curl',
@@ -100,9 +100,9 @@ class SecureMail
 		'metasploit',
 		'libwww',
 		'curl',
-		'wget',
 		'python',
 		'nikto',
+		'acunetix',
 		'scan'
 	]; 
 	
@@ -153,6 +153,7 @@ class SecureMail
 		'-'
 	];	
 	
+	// Disallowed vectors to detect spam/e-mail injection.
 	const BODYVECTORS= [
 		'Return-Path',
 		'Content-Type',
