@@ -18,7 +18,7 @@ include("class.SecureMail.php");
 	
 	if(isset($_POST['token']))  {
 			// A token was provided through $_POST data. Check if it is the same as our session token.
-			if($_POST['token'] == $_SESSION['token']) {
+			if($_POST['token'] === $_SESSION['token']) {
 				// The submitted token appears to be similar as the session token we set. Obtain $_POST data.   
 				$parameters = array( 
 					'to' => 'info@yourdomain.tld',
@@ -27,12 +27,10 @@ include("class.SecureMail.php");
 					'subject' => $_POST['subject'],
 					'body' => $_POST['body']
 				);
-				
 				// Proceed to check the $_POST data.
 				$checkForm = new \security\forms\SecureMail($parameters);
 				// Check the script timer to see how much time was spent.
 				$spent_time = $checkForm->getTime();
-
 				if($spent_time == true) {
 					// Enough time has been spent, proceed scanning the $_POST data.
 					$scan = $checkForm->fullScan();
@@ -43,10 +41,6 @@ include("class.SecureMail.php");
 							$checkForm->sendmail();
 							// Show a message.
 							$checkForm->sessionmessage('Mail sent!'); 
-							// Destroy the old token.
-							$checkForm->destroyToken();
-							// Initiate a new token.
-							$token = $checkForm->getToken();
 							} else {
 							// The class found something, we cannot send the mail.
 							$checkForm->sessionmessage('Mail not sent.');
@@ -56,21 +50,21 @@ include("class.SecureMail.php");
 			} 
 
 		// Show all session messages.
-		$checkSatus = new \security\forms\SecureMail();
-		$checkSatus->showmessage();
+		$checkStatus = new \security\forms\SecureMail();
+		$checkStatus->showmessage();
 	} 
 
 // Setup new secure mail form.
 $setup = new \security\forms\SecureMail();
+// Clear any previous sessions messages.
+$setup->clearmessages();
 // Create a secure token.
 $token = $setup->getToken();
 // Place the token inside a server-side session.
 $_SESSION['token'] = $token;
 // Create some time to track how long a user takes to complete the form.
 $time  = $setup->setTime();
-// Clear any previous sessions messages.
-$setup->clearmessages();
-// Try to detect a Robot. If found, do you want to show a Captcha?
+// Try to detect a Robot on this form. If found, do you want to show a Captcha?
 $robot = $setup->detectrobot();
 if($robot == TRUE) {
 	// YOUR OWN CAPTCHA CODE HERE.
