@@ -31,7 +31,7 @@ include("class.SecureMail.php");
 				$checkForm = new \security\forms\SecureMail($parameters);
 				// Check the script timer to see how much time was spent.
 				$spent_time = $checkForm->getTime();
-				if($spent_time == true) {
+				if($spent_time == TRUE) {
 					// Enough time has been spent, proceed scanning the $_POST data.
 					$scan = $checkForm->fullScan();
 						// Did the scan found something?
