@@ -57,23 +57,153 @@ class SecureMail
 	const SENSITIVITY_VALUE		= 'Normal'; 	// Normal, Personal, Private and Company-Confidential.
 	const CUSTOMHEADER		= 'X-Klingon-Header-1'; // Optional, your own Header. The 'X-' part is required! (disabled by default)
 	const CUSTOMHEADERVALUE		= 'JAJ VIGHAJ'; // Value of the custom Header. Klingon for: "Own the day." 
-	const REMOVEPHPHEADERS  	= false; 	// Experimental. Tries to remove X-PHP headers. To removes all PHP headers for certain, edit your php.ini: 'mail.add_x_header = Off'
-		
+
+	### PRIVATE VARIABLES.
 	private $sieve 			= 0;    // Empty sieve 
-	private $slots 			= 10;	// Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
+	private $slots 			= 1000;	// Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
+		
+	### ARRAYS
+	// Detect proxy ports.
+	const PROXYPORTS = [
+		80, 
+		443, 
+		808, 
+		3128, 
+		8080, 
+		8118, 
+		1080
+	]; 
+	
+	// Allowed request methods to access the form.
+	const REQUESTMETHODS = [
+		'POST',
+		'GET'
+	]; 
+	
+	// Attempts to find robots.
+	const DISALLOWEDAGENTS = [
+		'java',
+		'curl',
+		'wget',
+		'winhttp',
+		'HTTrack',
+		'chromeframe',
+		'clshttp',
+		'archiver',
+		'loader',
+		'email',
+		'harvest',
+		'extract',
+		'exploit',
+		'grab',
+		'miner',
+		'metasploit',
+		'libwww',
+		'curl',
+		'wget',
+		'python',
+		'nikto',
+		'scan'
+	]; 
+	
+	// Disallowed characters in the fields.
+	const DISALLOWEDCHARS = [
+		'%0A',
+		'%0D',
+		'\u000A',
+		'\u000D',
+		'0x000d',
+		'0x000a',
+		'&#13;',
+		'&#10;',
+		'\r',
+		'\n',
+		';',
+		'<',
+		'>',
+		'`',
+		'~',
+		'$',
+		'%',
+		'/',
+		'\\',
+		'{',
+		'}',
+		'[',
+		']',
+		'\'',
+		'"',
+		'=',
+		'-=',
+		'=-',
+		'<?',
+		'?>',
+		'<%',
+		'%>',
+		'!#',
+		'<<<',
+		'../',
+		'./'
+	];
+	
+	// These are allowed only once in a field.
+	const FIELDVECTORS = [
+		'@',
+		'+',
+		'-'
+	];	
+	
+	const BODYVECTORS= [
+		'Return-Path',
+		'Content-Type',
+		'text/plain',
+		'MIME-Version',
+		'Content-Transfer-Encoding',
+		'Subject:',
+		'bcc:'
+	];
+	
+	// Detect proxy header.
+	const PROXY = [
+		'HTTP_VIA',
+		'VIA',
+		'PROXY',
+		'Proxy-Connection',
+		'HTTP_X_FORWARDED_FOR',  
+		'HTTP_FORWARDED_FOR',
+		'HTTP_X_FORWARDED',
+		'HTTP_FORWARDED',
+		'HTTP_CLIENT_IP',
+		'HTTP_FORWARDED_FOR_IP',
+		'X-PROXY-ID',
+		'MT-PROXY-ID',
+		'X-TINYPROXY',
+		'X_FORWARDED_FOR',
+		'FORWARDED_FOR',
+		'X_FORWARDED',
+		'FORWARDED',
+		'CLIENT-IP',
+		'CLIENT_IP',
+		'PROXY-AGENT',
+		'HTTP_X_CLUSTER_CLIENT_IP',
+		'FORWARDED_FOR_IP',
+		'HTTP_PROXY_CONNECTION'
+	];	
 	
 	### END OF CONFIGURATION 
-	
+
 	public function __construct($params = array()) 
 	{ 
 		$this->init($params);
 		$this->allocateMailSlots();
 	}
+	
 	public function __destruct()
 	{
 		$this->bodyvectors = array();
 		$this->fieldvectors = array();
 	}
+	
 	public function fullScan() 
 	{
 		$this->allocateMailSlots();
@@ -118,31 +248,7 @@ class SecureMail
 			$this->sessionmessage('Problem initializing:'.$e->getMessage());
 		}
     	}
-	/**
-	* Occurence of these field vectors is allowed only once.
-	* @var array
-	*/	
-	public $fieldvectors = array('@','+','-');
-	
-	/**
-	* Disallowed body vectors, to prevent spam. 
-	* (All html will be stripped on sending.)
-	* @var array
-	*/
-	public $bodyvectors = array(
-		'Return-Path','Content-Type','text/plain','MIME-Version','Content-Transfer-Encoding','Subject:','bcc:'
-	);
-	
-	/**
-	* Disallowed characters. Only for detection (and logging) purposes.
-	* @var array
-	*/	
-	public $disallowedchars = array(
-		'%0A','%0D','\u000A','\u000D','0x000d','0x000a','&#13;','&#10;','\r','\n',
-		';','<','>','`','~','$','%','/','\\','{','}','[',']','\'','"','=','-=','=-',
-		'<?','?>','<%','%>','!#','<<<','../','./'
-	);
-	
+
 	/**
 	* Performs a scan on the field contents.
 	* @return boolean
@@ -161,15 +267,15 @@ class SecureMail
 				} 
 				
 				// check for disallowed chars
-				for($j=0; $j<count($this->disallowedchars); $j++) { 
-					if(stristr($value,$this->disallowedchars[$j])) {	
+				for($j=0; $j<count(self::DISALLOWEDCHARS); $j++) { 
+					if(stristr($value,self::DISALLOWEDCHARS[$j])) {	
 					$this->sessionmessage('Issue found: disallowed characters.'); 
 					$this->sieve++;  
 					}	
 				}
 				// scan for duplicate characters.
-				for($k=0; $k<count($this->fieldvectors); $k++) {
-					if(substr_count($value, $this->fieldvectors[$k]) >1) { 
+				for($k=0; $k<count(self::FIELDVECTORS); $k++) {
+					if(substr_count($value, self::FIELDVECTORS[$k]) >1) { 
 						$this->sessionmessage('Issue found: duplicate characters.'); 
 						$this->sieve++; 
 					} 
@@ -191,8 +297,8 @@ class SecureMail
 	public function bodyScan() 
 	{	
 		if($this->fields['body'] != false) {
-			for($i=0; $i<count($this->bodyvectors); $i++) {
-				if(stristr($this->fields['body'], $this->bodyvectors[$i])) { 
+			for($i=0; $i<count(self::BODYVECTORS); $i++) {
+				if(stristr($this->fields['body'], self::BODYVECTORS[$i])) { 
 					$this->sessionmessage('Issue found: body text contains disallowed characters.'); 
 					$this->sieve++; 
 				}
@@ -251,22 +357,6 @@ class SecureMail
 			$custom = array(self::CUSTOMHEADER => self::CUSTOMHEADERVALUE);
 			$headers = array_merge($headers,$custom);
 		}	
-	
-		if(self::REMOVEPHPHEADERS == true) {
-			try {
-				// Trying to remove sensitive headers. Experimental. for best result, edit php.ini.
-				@header_remove('x-powered-by');
-				@header_remove('X-PHP-Script');
-				$_SERVER['REMOTE_ADDR'] = $_SERVER['SERVER_ADDR'];
-				$HTTP_SERVER_VARS['PHP_SELF'] = "/";
-				$_SERVER['SCRIPT_FILENAME'] = '/';
-				$_SERVER['PHP_SELF'] = "/"; 
-				$_SERVER['REQUEST_URI'] = '/';
-				$_SERVER['SCRIPT_NAME'] = '/';
-			} catch(Exception $e) {
-			$this->sessionmessage('Headers could not be unset:'.$e->getMessage());
-			}
-		}
 		
 		foreach ($headers as $key => $value) {
 			$mime_headers[] = "$key: $value";
@@ -291,30 +381,24 @@ class SecureMail
 	*/
 	public function detectrobot() {
 
-		$sizeRm = strlen($_SERVER['REQUEST_METHOD']);
-		$allowedMethods = array('POST','GET');
+		$requestMethod 	= $_SERVER['REQUEST_METHOD'];
+		$userAgent 	= $_SERVER['HTTP_USER_AGENT'];
+		$port		= $_SERVER['REMOTE_PORT'];
 		
-		$useragent = $_SERVER['HTTP_USER_AGENT'];
-		$sizeUa = strlen($useragent);
-		
-		$port = $_SERVER['REMOTE_PORT'];
-		$ports = array(80, 443, 808, 3128, 8080, 8118, 1080);
-		
-		// disallowed user-agents.
-		$find = array('java','curl','wget','winhttp','HTTrack','chromeframe','clshttp','archiver','loader','email',
-		'harvest','extract','exploit','grab','miner','metasploit','libwww','curl','wget','python','nikto','scan');
+		$sizeRm = strlen($requestMethod);
+		$sizeUa = strlen($userAgent);
 		
 		if($sizeRm > 12 || $sizeRm < 2) {
 			return TRUE;
 			} else {
 			// Find request method.
-			if(!in_array($_SERVER['REQUEST_METHOD'],$allowedMethods)) {
+			if(!in_array($requestMethod,self::REQUESTMETHODS)) {
 			return TRUE;
 			}
 		}
 
 		// Scan the port for proxy.
-		if(in_array($port,$ports)) {
+		if(in_array($port,self::PROXYPORTS)) {
 			return TRUE;
 		}
 
@@ -327,7 +411,7 @@ class SecureMail
 			return TRUE;
 		}
 		
-		foreach($find as $key) {
+		foreach(self::DISALLOWEDAGENTS as $key) {
 			if(stristr($useragent, $key)) {
 				return TRUE;
 				break;
@@ -335,38 +419,12 @@ class SecureMail
 
 		} 
 
-		// Detect proxy.
-		$proxy = array(
-			'HTTP_VIA',
-			'VIA',
-			'PROXY',
-			'Proxy-Connection',
-			'HTTP_X_FORWARDED_FOR',  
-			'HTTP_FORWARDED_FOR',
-			'HTTP_X_FORWARDED',
-			'HTTP_FORWARDED',
-			'HTTP_CLIENT_IP',
-			'HTTP_FORWARDED_FOR_IP',
-			'X-PROXY-ID',
-			'MT-PROXY-ID',
-			'X-TINYPROXY',
-			'X_FORWARDED_FOR',
-			'FORWARDED_FOR',
-			'X_FORWARDED',
-			'FORWARDED',
-			'CLIENT-IP',
-			'CLIENT_IP',
-			'PROXY-AGENT',
-			'HTTP_X_CLUSTER_CLIENT_IP',
-			'FORWARDED_FOR_IP',
-			'HTTP_PROXY_CONNECTION');
-
-		foreach($proxy as $value){
+		foreach(self::PROXY as $value){
 			if (isset($_SERVER[$value])) {
 				return TRUE;
+				break;
 			}
 		}
-
 	}
 	
   	/**
@@ -375,7 +433,6 @@ class SecureMail
 	*/	
 	public function setTime()
 	{
-
 		$_SESSION['form_time'] = microtime(true);	
 		return TRUE;
 	}
@@ -410,7 +467,6 @@ class SecureMail
 	*/
 	public function getToken()
 	{
-		
 		$bytes = 0;
 		
 		if (function_exists('random_bytes')) {
@@ -549,21 +605,6 @@ class SecureMail
 	public function clearmessages() 
 	{
 		$_SESSION['mail_message'] = array(); 
-	}
-	
-	/**
-	* Checks e-mail address
-	* @return mixed boolean
-	*/
-	public function checkAddress($string) 
-	{
-		// with all the new domain name extensions we allow a for maximum 14.
-		// XXX depricated.
-		if (preg_match('/^[A-Za-z0-9-_.+%]+@[A-Za-z0-9-.]+.[A-Za-z]{2,14}$/',$string)) {
-			return TRUE;
-			} else {
-			return FALSE;
-		}
 	}
 	
 	/**
