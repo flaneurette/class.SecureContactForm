@@ -1,6 +1,6 @@
 <?php
 
-// Error reporting (only for testing, disable when going live).
+// Error reporting (for testing only).
 ini_set('display_errors', 1); 
 error_reporting(E_ALL);
 
@@ -17,8 +17,10 @@ session_start();
 include("class.SecureMail.php");
 	
 	if(isset($_POST['token']))  {
+		
 			// A token was provided through $_POST data. Check if it is the same as our session token.
 			if($_POST['token'] == $_SESSION['token']) {
+				
 				// The submitted token appears to be similar as the session token we set. Obtain $_POST data.   
 				$parameters = array( 
 					'to' => 'info@yourdomain.tld',
@@ -27,26 +29,36 @@ include("class.SecureMail.php");
 					'subject' => $_POST['subject'],
 					'body' => $_POST['body']
 				);
+				
 				// Proceed to check the $_POST data.
 				$checkForm = new \security\forms\SecureMail($parameters);
+				
 				// Check the script timer to see how much time was spent.
 				$spent_time = $checkForm->getTime();
 				
 				if($spent_time == true) {
+					
 					// Enough time has been spent, proceed scanning the $_POST data.
-					$scan = $checkForm->fullScan(); 
+					$scan = $checkForm->fullScan();
+					
 						// Did the scan found something?
 						if($scan != FALSE) {
+							
 							// The class decided the $_POST data was correct. 
 							// Start sending the mail.
 							$checkForm->sendmail();
+							
 							// Show a message.
 							$checkForm->sessionmessage('Mail sent!'); 
+							
 							// Destroy the old token.
 							$checkForm->destroyToken();
+							
 							// Initiate a new token.
 							$token = $checkForm->getToken();
+							
 							} else {
+								
 							// The class found something, we cannot send the mail.
 							$checkForm->sessionmessage('Mail not sent.');
 						}
@@ -61,14 +73,26 @@ include("class.SecureMail.php");
 
 	// Setup new secure mail form.
 	$setup = new \security\forms\SecureMail();
+	
 	// Create a secure token.
 	$token = $setup->getToken();
+	
 	// Place the token inside a server-side session.
 	$_SESSION['token'] = $token;
+	
 	// Create some time to track how long a user takes to complete the form.
 	$time  = $setup->setTime();
+	
 	// Clear any previous sessions messages.
-	$setup->clearmessages();	
+	$setup->clearmessages();
+	
+	// Try to detect a Robot. If found, do you want to show a Captcha?
+	$robot = $setup->detectrobot();
+	if($robot == TRUE) {
+		// YOUR CAPTCHA CODE HERE.
+		// echo "Prove to us you are not a robot.";
+	}
+		
 ?>
 
 <h2>Secure mail form.</h2>
