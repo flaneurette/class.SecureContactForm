@@ -11,17 +11,14 @@ header("Strict-Transport-Security: max-age=30");
 header("Referrer-Policy: same-origin");
 
 // Start our session.
-session_start([
-    'cookie_httponly' => true,
-    'cookie_secure' => true
-]);
+session_start();
 
 // Include our class, optional: make it required.
 include("class.SecureMail.php");
 	
 	if(isset($_POST['token']))  {
 			// A token was provided through $_POST data. Check if it is the same as our session token.
-			if($_POST['token'] === $_SESSION['token']) {
+			if($_POST['token'] == $_SESSION['token']) {
 				// The submitted token appears to be similar as the session token we set. Obtain $_POST data.   
 				$parameters = array( 
 					'to' => 'info@yourdomain.tld',
@@ -55,31 +52,23 @@ include("class.SecureMail.php");
 						}
 				}
 				
-			} else {
-				// The provided token did not match with our session token.
-				$checkForm->sessionmessage('Invalid token.'); 
-				// Destroy the old token.
-				$checkForm->destroyToken();
-				// Initiate a new token.
-				$token = $checkForm->getToken();
-			}
-	
-	// Show all session messages.
-	$checkForm->showmessage();
-	
-	} else {
-		// Setup new secure mail form.
-		$setup = new \security\forms\SecureMail();
-		// Create a secure token.
-		$token = $setup->getToken();
-		// Place the token inside a server-side session.
-		$_SESSION['token'] = $token;
-		// Create some time to track how long a user takes to complete the form.
-		$time  = $setup->setTime();
-		// Clear any previous sessions messages.
-		$setup->clearmessages();
-	}
-	
+			} 
+
+		// Show all session messages.
+		$checkSatus = new \security\forms\SecureMail();
+		$checkSatus->showmessage();
+	} 
+
+	// Setup new secure mail form.
+	$setup = new \security\forms\SecureMail();
+	// Create a secure token.
+	$token = $setup->getToken();
+	// Place the token inside a server-side session.
+	$_SESSION['token'] = $token;
+	// Create some time to track how long a user takes to complete the form.
+	$time  = $setup->setTime();
+	// Clear any previous sessions messages.
+	$setup->clearmessages();	
 ?>
 
 <h2>Secure mail form.</h2>
