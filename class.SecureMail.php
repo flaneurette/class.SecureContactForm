@@ -383,8 +383,8 @@ class SecureMail
 	public function detectrobot() {
 
 		$requestMethod 	= $_SERVER['REQUEST_METHOD'];
-		$userAgent 		= $_SERVER['HTTP_USER_AGENT'];
-		$port			= $_SERVER['REMOTE_PORT'];
+		$userAgent 	= $_SERVER['HTTP_USER_AGENT'];
+		$port		= $_SERVER['REMOTE_PORT'];
 		
 		$sizeRm = strlen($requestMethod);
 		$sizeUa = strlen($userAgent);
@@ -400,17 +400,15 @@ class SecureMail
 
 		// Scan the port for proxy.
 		if(in_array($port,self::PROXYPORTS)) {
-			
 			return TRUE;
 		}
 
 		if(isset($userAgent)) {
-				// Check maximum and minimum size of user-agent.
-				if($sizeUa > 512 || $sizeUa < 2) {
-					return TRUE;
-				}
-			} else {
-		}
+			// Check maximum and minimum size of user-agent.
+			if($sizeUa > 512 || $sizeUa < 1) {
+				return TRUE;
+			}
+		} 
 		
 		foreach(self::DISALLOWEDAGENTS as $key) {
 			if(stristr($userAgent, $key)) {
