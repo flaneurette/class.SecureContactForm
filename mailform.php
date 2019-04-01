@@ -52,6 +52,8 @@ include("class.SecureMail.php");
 		// Show all session messages.
 		$checkStatus = new \security\forms\SecureMail();
 		$checkStatus->showmessage();
+		// Destroy the session to finish.
+		$checkStatus->destroysession();
 	} 
 
 // Setup new secure mail form.
