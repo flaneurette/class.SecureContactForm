@@ -60,7 +60,7 @@ class SecureMail
 
 	### PRIVATE VARIABLES.
 	private $sieve 			= 0;    // Empty sieve 
-	private $slots 			= 1000;	// Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
+	private $slots 			= 10;	// Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
 		
 	### ARRAYS
 	// Detect proxy ports.
