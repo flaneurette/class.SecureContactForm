@@ -25,9 +25,9 @@ namespace security\forms;
 class SecureMail
 {
 	### REQUIRED CONFIGURATION
-	const DOMAIN			= 'yourdomain.tld'; // Domain this script is hosted on.
-	const SERVERADDR		= 'server <server@yourdomain.tld>'; // Server e-mail address.
-	const DEFAULTTO			= 'info@yourdomain.tld'; // default "to" e-mail address when address has not been provided.
+	const DOMAIN			= 'yourserver.tld'; // Domain this script is hosted on.
+	const SERVERADDR		= 'server <server@yourserver.tld>'; // Server e-mail address.
+	const DEFAULTTO			= 'info@yourserver.tld'; // default "to" e-mail address when address has not been provided.
 	
 	### OPTIONAL CONFIGURATION (DEFAULT)
 	const XMAILER			= 'Secure Mail'; // Name class mailer.
@@ -41,7 +41,7 @@ class SecureMail
 	const WORD_WRAP			= true;		// Wrap message?
 	const WORD_WRAP_VALUE		= 70;		// Wrap at line length.
 	const MAXBODYSIZE 		= 5000; 	// Number of chars of body text.
-	const MAXFIELDSIZE 		= 50;   	// Number of allowed chars for single fields.
+	const MAXFIELDSIZE 		= 150;   	// Number of allowed chars for single fields.
 	const FORMTIME			= 10;  		// Minimum time in seconds for a user to fill out a form, detects bots.
 	
 	### ADVANCED CONFIGURATION
@@ -60,7 +60,7 @@ class SecureMail
 
 	### PRIVATE VARIABLES.
 	private $sieve 			= 0;    // Empty sieve 
-	private $slots 			= 10;	// Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
+	private $slots 			= 1000;	// Maximum number of mail slots per user, per browse session incuding refresh and errors. Increase for testing purposes.                      
 		
 	### ARRAYS
 	// Detect proxy ports.
@@ -244,7 +244,7 @@ class SecureMail
 			isset($params['terms'])      ? $this->fields['terms']   = $params['terms'] : '';
 			isset($params['captcha'])    ? $this->fields['captcha']   = $params['captcha'] : '';
 			isset($params['extrafield']) ? $this->fields['extrafield']   = $params['extrafield'] : '';
-			isset($params['body'])       ? $this->fields['body'] = $params['body'] : false;
+			isset($params['body'])       ? $this->body['body'] = $params['body'] : false;
 		} catch(Exception $e) {
 			$this->sessionmessage('Problem initializing:'.$e->getMessage());
 		}
@@ -257,7 +257,10 @@ class SecureMail
 	public function fieldScan() 
 	
 	{	
-		foreach(array_values($this->fields) as $key => $value)  {
+	
+		$fieldarray = array_values($this->fields);
+	
+		foreach($fieldarray as $key => $value)  {
 		
 				// check fieldsize.
 				if(strlen($value) > self::MAXFIELDSIZE) { 
@@ -297,9 +300,9 @@ class SecureMail
 	*/	
 	public function bodyScan() 
 	{	
-		if($this->fields['body'] != false) {
+		if($this->body['body'] != false) {
 			for($i=0; $i<count(self::BODYVECTORS); $i++) {
-				if(stristr($this->fields['body'], self::BODYVECTORS[$i])) { 
+				if(stristr($this->body['body'], self::BODYVECTORS[$i])) { 
 					$this->sessionmessage('Issue found: body text contains disallowed characters.'); 
 					$this->sieve++; 
 				}
@@ -309,7 +312,7 @@ class SecureMail
 			$this->sieve++; 
 		}
 		
-		if(strlen($this->fields['body']) > self::MAXBODYSIZE) {
+		if(strlen($this->body['body']) > self::MAXBODYSIZE) {
 			$this->sessionmessage('Issue: Maximum body text exceeded:' . self::MAXBODYSIZE); 
 			$this->sieve++; 		
 		}
@@ -332,8 +335,9 @@ class SecureMail
 		$from    = self::SERVERADDR; 		
 		$to      = $this->clean($this->fields['to'],'field');
 		$name    = $this->clean($this->fields['name'],'field');
+		$email    = $this->clean($this->fields['email'],'field');
 		$subject = $this->clean($this->fields['subject'],'field');
-		$message = $this->clean($this->fields['body'],'body');
+		$message = $this->clean($this->body['body'],'body');
 		$ip      = $this->clean($_SERVER['REMOTE_ADDR'],'field');
 		
 		$headers = [
@@ -362,7 +366,13 @@ class SecureMail
 		foreach ($headers as $key => $value) {
 			$mime_headers[] = "$key: $value";
 		}
+		
 		$mail_headers = join("\n", $mime_headers);
+		
+		$message .= "\n\n";
+		$message .= "From: " . $email;
+		$message .= "\n";
+		$message .= "IP: " . $ip;
 		
 		if(self::WORD_WRAP == true) {
 			$message = wordwrap($message, self::WORD_WRAP_VALUE, "\r\n");
