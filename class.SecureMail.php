@@ -232,6 +232,7 @@ class SecureMail
     	public function init($params=[])
         {
 		try {
+			
 			isset($params['to'])         ? $this->fields['to']  = $params['to'] : self::DEFAULTTO; 
 			isset($params['name'])       ? $this->fields['name']   = $params['name'] : ''; 
 			isset($params['email'])      ? $this->fields['email']    = $params['email']  : '';
@@ -615,6 +616,12 @@ class SecureMail
 	public function clearmessages() 
 	{
 		$_SESSION['mail_message'] = array(); 
+	}
+	
+	public function destroysession() 
+	{
+		session_unset();
+		session_destroy();	
 	}
 	
 	/**
