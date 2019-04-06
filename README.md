@@ -43,7 +43,13 @@ The captcha image does not require the class. By default it does not show a capt
 		echo "<img src='http://yourwebsite.tld/captcha/' width='120'>";
 	}
 	
-Then, on the mailform.php you need to read the captcha_request, which was stored inside a session.
+Then, on the mailform.php you need to read the $_SESSION['captcha_question'] , which was stored inside the image session.
+
+Like so:
+
+	if($_SESSION['captcha_question'] === $_POST['captcha']) {
+		echo "Captcha was correct!";
+	}
 
 # Methodology:
 
