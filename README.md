@@ -38,9 +38,10 @@ The captcha image does not require the class. By default it does not show a capt
 	$robot = $setup->detectrobot();
 
 	if($robot == TRUE) {
-		// YOUR OWN CAPTCHA CODE HERE.
-		// echo "Prove to us you are not a robot.";
-		echo "<img src='http://yourwebsite.tld/captcha/' width='120'>";
+		// CAPTCHA CODE HERE.
+		echo "Prove to us you are not a robot.";
+		echo '<img src="http://yourwebsite.tld/captcha/" width="120">';
+		echo '<input type="text" name="captcha" value="">';
 	}
 	
 Then, on the mailform.php you need to read the $_SESSION['captcha_question'] , which was stored inside the image session.
@@ -50,6 +51,8 @@ Like so:
 	if($_SESSION['captcha_question'] === $_POST['captcha']) {
 		echo "Captcha was correct!";
 	}
+	
+And then decide what to do next...
 
 # Methodology:
 
