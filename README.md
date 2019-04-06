@@ -31,6 +31,9 @@ Since the beginning of the internet, securing a contact-form has been a notoriou
 
 The captcha image does not require the class. By default it does not show a captcha. To enable the use of a captcha, some additional code is required:
 
+	// Setup new secure mail form.
+	$setup = new \security\forms\SecureMail();
+	
 	// Try to detect a Robot on this form. If found, do you want to show a Captcha?
 	$robot = $setup->detectrobot();
 
