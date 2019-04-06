@@ -4,10 +4,6 @@ A Secure mail class and contact form for PHP. See the mailform.php for a complet
 
 Since the beginning of the internet, securing a contact-form has been a notoriously difficult theme with regards to webapplication security. This class aims at tackling it in a practical and easy to understand way. The class uses the php internal mail function, a sendmail/qmail extension is planned. This class is particuarly useful for students who like to know more about webapplication security and see how certain challenges are approached. 
 
-
-![Image of Captcha](https://raw.githubusercontent.com/flaneurette/class.SecureMail/56c2a651f9bb6ef1b62d1def915772559ca4dbd8/captcha/example.png)
-
-
 # Simple implementation:
 
     include("class.SecureMail.php");
@@ -29,7 +25,23 @@ Since the beginning of the internet, securing a contact-form has been a notoriou
 			} else {
 			$checkForm->sessionmessage('Mail not sent.');
 		}
-		
+# Captcha.
+
+![Image of Captcha](https://raw.githubusercontent.com/flaneurette/class.SecureMail/56c2a651f9bb6ef1b62d1def915772559ca4dbd8/captcha/example.png)
+
+The captcha image does not require the class. By default it does not show a captcha. To enable the use of a captcha, some additional code is required:
+
+	// Try to detect a Robot on this form. If found, do you want to show a Captcha?
+	$robot = $setup->detectrobot();
+
+	if($robot == TRUE) {
+		// YOUR OWN CAPTCHA CODE HERE.
+		// echo "Prove to us you are not a robot.";
+		echo "<img src='http://yourwebsite.tld/captcha/' width='120'>";
+	}
+	
+Then, on the mailform.php you need to read the captcha_request, which was stored inside a session.
+
 # Methodology:
 
 The sobering facts: 100% security does not exist. All we can do is slow things down, making an attack too expensive and avoid the obvious. Also, security is not code poetry. It isn't pretty! More often than not, it involves sticking to the very basics and being strict in how the code is supposed to flow, leaving little room for inspired creative outbursts. 
