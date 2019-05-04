@@ -25,6 +25,34 @@ Since the beginning of the internet, securing a contact-form has been a notoriou
 			} else {
 			$checkForm->sessionmessage('Mail not sent.');
 		}
+		
+		
+# Parse HTML templates
+The HTML template parse function expects {{ and }} to delimit variables to parse. This can be changed in the confirguration.
+
+		$tpl = new \security\forms\SecureMail([]);
+		
+		$template_location = 'inc/templates/registration.html';
+		
+		$template_pairs = [
+			"regid" => 123456, 
+			"foo" => "bar"
+		];
+		
+		$html = $tpl->parseTemplate($template_location,$template_pairs);
+			
+		$parameters = array( 
+			'to' => $_POST['email'],
+			'name' => $_POST['name'],
+			'email' => $_POST['email'],			
+			'subject' => 'Twigpage',
+			'body' => $html
+		);
+		
+		$checkForm = new \security\forms\SecureMail($parameters);
+		$checkForm->sendmail();
+	
+	
 # Captcha.
 
 ![Image of Captcha](https://raw.githubusercontent.com/flaneurette/class.SecureMail/56c2a651f9bb6ef1b62d1def915772559ca4dbd8/captcha/example.png)
