@@ -43,6 +43,8 @@ class SecureMail
 	const MAXBODYSIZE 		= 5000; 	// Number of chars of body text.
 	const MAXFIELDSIZE 		= 150;   	// Number of allowed chars for single fields.
 	const FORMTIME			= 10;  		// Minimum time in seconds for a user to fill out a form, detects bots.
+	const TEMPLATE_START		= '{{';     	// Placeholder start for HTML template variables. 
+	const TEMPLATE_END		= '}}';    	// Placeholder end for HTML template variables.
 	
 	### ADVANCED CONFIGURATION
 	const PHPENCODING 		= 'UTF-8';	// Characterset of PHP functions: (htmlspecialchars, htmlentities) 
@@ -385,6 +387,27 @@ class SecureMail
 			$send = mail($to, $subject, $message, $mail_headers, self::OPTPARAM . $from);
 		}
 		return TRUE;
+	}
+	
+	/**
+	* Parses html templates.
+	* @return string html code.
+	*/
+	public function parseTemplate($template,$parameters) {	
+		$html = '';
+		if(file_exists($template)) {
+			$html = file_get_contents($template);
+			if(is_array($parameters) && is_string($html)) {
+				foreach ($parameters as $key => $value) {
+					$html = str_ireplace(self::TEMPLATE_START.$key.self::TEMPLATE_END, $value, $html);
+				}
+			}
+		} else {
+			$this->sessionmessage('Template file does not exist.'); 
+			return FALSE; // e-mail cannot be send.	
+		}
+		
+		return $html;
 	}
 	
 	/**
