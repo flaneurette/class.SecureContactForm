@@ -28,7 +28,7 @@ Since the beginning of the internet, securing a contact-form has been a notoriou
 		
 		
 # Parse HTML templates
-The HTML template parse function expects {{ and }} to delimit variables to parse. This can be changed in the confirguration.
+The HTML template parse function expects {{ and }} to delimit variables to parse. This can be changed in the configuration.
 
 		$tpl = new \security\forms\SecureMail([]);
 		
@@ -45,7 +45,7 @@ The HTML template parse function expects {{ and }} to delimit variables to parse
 			'to' => $_POST['email'],
 			'name' => $_POST['name'],
 			'email' => $_POST['email'],			
-			'subject' => 'Twigpage',
+			'subject' => 'Registration',
 			'body' => $html
 		);
 		
