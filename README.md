@@ -27,8 +27,8 @@ Since the beginning of the internet, securing a contact-form has been a notoriou
 		}
 		
 		
-# Parse HTML templates
-The HTML template parse function expects {{ and }} to delimit variables to parse. This can be changed in the configuration.
+# Parse TXT templates
+The TXT template parse function expects {{ and }} to delimit variables to parse. This can be changed in the configuration.
 
 		$tpl = new \security\forms\SecureMail([]);
 		
