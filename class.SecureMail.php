@@ -577,8 +577,8 @@ class SecureMail
 		}
 		
 		$pseudobytes = substr($bytes,0,16);
-		
-		return sprintf("<%s.%s@%s>", base_convert(microtime(), 10, 36), base_convert(bin2hex($pseudobytes), 16, 36), $this->clean(self::DOMAIN,'domain'));
+		$cnum = preg_replace( '/[^0-9]/', '', microtime(false));
+		return sprintf("<%s.%s@%s>", base_convert($cnum, 10, 36), base_convert(bin2hex($pseudobytes), 16, 36), $this->clean(self::DOMAIN,'domain'));
 	}
 	
 	/**
