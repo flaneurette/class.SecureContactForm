@@ -22,6 +22,7 @@ namespace security\forms;
 ##                                                                       ##
 ###########################################################################
 
+#[\AllowDynamicProperties]
 class SecureMail
 {
 	### REQUIRED CONFIGURATION
